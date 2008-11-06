@@ -57,22 +57,35 @@ class SP_Parser extends CI_Parser {
 	 * Replace Global Variables
 	 *
 	 * Does not deal with globals inside other tags - those are done
-	 * separately by the handlers for those tags
+	 * separately by the handlers for those tags (@TODO make this true!)
 	 *
 	 * @access	public
 	 */
 	function _simple_tags($text, $nest_vars)
 	{
-		$simple_tags = array(
-							'board_title'		=> $this->CI->preferences->get('title'),
-							'template_group'	=> $this->CI->preferences->get('template'),
-							'logged_in'			=> $this->CI->permission->logged_in(),
-							'user_id'			=> current_user('id'),
-							'group_id'			=> current_user('group'),
-							'username'			=> current_user('username'),
-							'email'				=> current_user('email'),
-							'join_date'			=> current_user('join_date')
+		// Seperated for readability - no duplicate keys!
+		$board = array(
+						'board_title'		=> $this->CI->preferences->get('title'),
+						'template_group'	=> $this->CI->preferences->get('template')
 		);
+		
+		$urls = array(
+						'backend_base_url'	=> $this->CI->preferences->get('backend_base_url'),
+						'backend_login'		=> $this->CI->preferences->get('backend_login'),
+						'frontend_login'	=> $this->CI->template->get_path('login')
+		);
+		
+		$user = array(
+						'logged_in'			=> $this->CI->permission->logged_in(),
+						'user_id'			=> current_user('id'),
+						'group_id'			=> current_user('group'),
+						'username'			=> current_user('username'),
+						'email'				=> current_user('email'),
+						'join_date'			=> current_user('join_date')
+		);
+		
+		$simple_tags = array_merge($board, $urls, $user);
+		unset($board, $urls, $user);
 		
 		// Add the nested vars with an n: prefix
 		if (is_array($nest_vars))
@@ -196,7 +209,7 @@ class SP_Parser extends CI_Parser {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Parse the category tags
+	 * Parse the forum tags
 	 *
 	 * @access	public
 	 * @param	text to parse
@@ -204,6 +217,36 @@ class SP_Parser extends CI_Parser {
 	 * @param	node id
 	 */
 	function _parse_forum($text, $optional, $id)
+	{
+		// Required Model
+		$this->CI->load->model('tree_model', 'tree');
+		
+		// Category calls this
+		$node_type	= isset($optional['is_category']) ? 'category' : 'forum';
+
+		// Get the current node and direct descendants
+		$subtree = $this->CI->tree->get_subtree($id, 1, TRUE);
+		$current = array_shift($subtree);
+
+		$restrict_child = $current->restrict_child_type;
+		
+		$text = $this->_parse_node($current, $text, $node_type);
+		$text = $this->_parse_children($text, $optional, $subtree, $restrict_child);
+		
+		return $text;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Parse the thread tags
+	 *
+	 * @access	public
+	 * @param	text to parse
+	 * @param	optional parameters
+	 * @param	node id
+	 */
+	function _parse_thread($text, $optional, $id)
 	{
 		// Required Model
 		$this->CI->load->model('tree_model', 'tree');
@@ -241,7 +284,7 @@ class SP_Parser extends CI_Parser {
 			die('node type missmatch');
 		}
 
-		// What meta tags do we parse?
+		// What meta tags do we have to parse?
 		$node_meta = array('title', 'description');
 		
 		// Meta Data for the parent
