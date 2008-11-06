@@ -132,7 +132,7 @@ class Tree_model extends Model {
 	function insert($data, $parent_path = FALSE, $node_type = 'root')
 	{
 		$allowed	= array('user_id', 'title', 'url_title', 'description');
-		$data		= My_Model::_filter_input($allowed, $data);
+		$data		= filter_input_data($allowed, $data);
 				
 		$this->db->insert($this->c_table, $data);
 		$node_id = $this->db->insert_id();
