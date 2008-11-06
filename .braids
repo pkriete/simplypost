@@ -17,6 +17,12 @@ system/cache:
   type: svn
   revision: 1230
   remote: braid/system/cache
+system/scaffolding: 
+  squashed: true
+  url: http://dev.ellislab.com/svn/CodeIgniter/trunk/system/scaffolding
+  type: svn
+  revision: 1363
+  remote: braid/system/scaffolding
 system/helpers: 
   squashed: true
   url: http://dev.ellislab.com/svn/CodeIgniter/trunk/system/helpers
