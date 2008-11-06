@@ -1,0 +1,1 @@
+And the registration page - wohoo! {nest:member/profile} {nest:member/memberlist}
