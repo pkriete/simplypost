@@ -1,4 +1,4 @@
-{nest:header title="Show Forum"}
+{nest:global/header title="Show Forum"}
 
 {forum}
 
@@ -24,4 +24,4 @@
 	
 {/forum}
 
-{nest:footer}
+{nest:global/footer}
