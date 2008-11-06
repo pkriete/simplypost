@@ -44,6 +44,14 @@ class Preferences {
 		{
 			$this->prefs->locked = 1;
 		}
+		
+		// Backend URLs
+		$backend_url = array_search('admin$1', $this->CI->router->routes);
+		$backend_url = str_replace('(.*)', '/', $backend_url);
+		
+		$this->set('backend_base_url', $backend_url);
+		$this->set('backend_login', $backend_url.'login');
+		unset($admin_url);
 	}
 
 	// --------------------------------------------------------------------
@@ -60,6 +68,18 @@ class Preferences {
 			return $this->prefs->$key;
 		}
 		return FALSE;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Preferences Setter
+	 *
+	 * @access	public
+	 */
+	function set($key, $value)
+	{
+		$this->prefs->$key = $value;
 	}
 }
 
