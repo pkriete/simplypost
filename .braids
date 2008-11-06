@@ -5,6 +5,12 @@ system/cache:
   type: svn
   revision: 1230
   remote: braid/system/cache
+system/helpers: 
+  squashed: true
+  url: http://dev.ellislab.com/svn/CodeIgniter/trunk/system/helpers
+  type: svn
+  revision: 1559
+  remote: braid/system/helpers
 system/fonts: 
   squashed: true
   url: http://dev.ellislab.com/svn/CodeIgniter/trunk/system/fonts
