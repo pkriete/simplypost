@@ -40,14 +40,37 @@
 |
 */
 
-$route['default_controller'] = "main";
-$route['scaffolding_trigger'] = "";
+/*
+| -------------------------------------------------------------------------
+| ROUTE FROM CONFIG
+| -------------------------------------------------------------------------
+|
+| To make the backend base url easy to customize and access, it was
+| put into a config file.  So now we need to get the pointer to that
+| library.  Using load_class feels better than accessing the global.
+|
+| DO NOT CHANGE THIS STUFF UNLESS YOU KNOW WHAT YOU'RE DOING!
+|
+*/
+$CFG =& load_class('Config');
+$CFG->load('access');
 
-// This is editable if you want to hide the backend
-// Only change the part before (.*)
-$route['admin(.*)'] = 'admin$1';
+$backend_url = $CFG->item('backend_base');
 
-$route['(.+)'] = 'main';
+if( ! $backend_url)
+{
+	die('configuration error - no backend!');
+}
+
+$backend_url .= '(.*)';
+
+
+$route = array(
+				'default_controller'	=> 'frontend',
+				'scaffolding_trigger'	=> '',
+				$backend_url			=> 'backend$1',
+				'(.+)'					=> 'frontend',
+);
 
 /* End of file routes.php */
 /* Location: ./system/application/config/routes.php */

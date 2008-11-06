@@ -64,6 +64,22 @@ class Tree_model extends Model {
 		$i = $this->db->get($this->table);
 		return $var = ($i->num_rows() > 0) ? $i->result() : FALSE;
 	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Gets a single node
+	 *
+	 * @access	private
+	 * @return	mixed
+	 */
+	function get_node($id)
+	{
+		$this->db->where('node.id', $id);
+		$this->db->join($this->c_table, "{$this->c_table}.meta_id = {$this->table}.node_id", 'inner');
+		$i = $this->db->get($this->table, 1, 0);
+		return $var = ($i->num_rows() > 0) ? $i->row() : FALSE;
+	}
 
 	// --------------------------------------------------------------------
 

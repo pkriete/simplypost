@@ -251,12 +251,15 @@ class SP_Parser extends CI_Parser {
 		// Required Model
 		$this->CI->load->model('tree_model', 'tree');
 		
-		// Category calls this
-		$node_type	= isset($optional['is_category']) ? 'category' : 'forum';
-
-		// Get the current node and direct descendants
-		$subtree = $this->CI->tree->get_subtree($id, 1, TRUE);
-		$current = array_shift($subtree);
+		// Get the current node
+		$node = $this->CI->tree->get_node($id);
+		
+		if ($node)
+		{
+			// @TODO: Check for pagination
+			$this->CI->load->model('post_model', 'posts');
+			$children = $this->posts->get_from_parent($id);
+		}
 
 		$restrict_child = $current->restrict_child_type;
 		

@@ -12,22 +12,22 @@
 // ------------------------------------------------------------------------
 
 /**
- * Main Controller
+ * Frontend Controller
  *
  * @package		SimplyPost
- * @subpackage	Home
+ * @subpackage	Frontend
  * @category	Controller
  * @author		Pascal Kriete
  */
 
-class Main extends Controller {
+class Frontend extends Controller {
 
 	/**
 	 * Constructor
 	 *
 	 * @access	public
 	 */
-	function Main()
+	function Frontend()
 	{
 		parent::Controller();	
 	}
@@ -134,7 +134,7 @@ class Main extends Controller {
 
 }
 
-// END Main class
+// END Frontend class
 
-/* End of file main.php */
-/* Location: ./application/controllers/main.php */
+/* End of file frontend.php */
+/* Location: ./application/controllers/frontend.php */

@@ -12,21 +12,21 @@
 // ------------------------------------------------------------------------
 
 /**
- * Admin Controller
+ * Member Management Controller
  *
  * @package		SimplyPost
- * @subpackage	Controllers
- * @category	Administration
+ * @subpackage	Backend - Members
+ * @category	Controller
  * @author		Pascal Kriete
  */
-class Admin extends Controller {
+class Members extends Controller {
 
 	/**
 	 * Constructor
 	 *
 	 * @access	public
 	 */
-	function Admin()
+	function Members()
 	{
 		parent::Controller();	
 	}
@@ -34,25 +34,13 @@ class Admin extends Controller {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Admin Home Page
+	 * Member Home Page
 	 *
 	 * @access	public
 	 */
 	function index()
 	{
-		echo 'backend';
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Backend Login Page
-	 *
-	 * @access	public
-	 */
-	function login()
-	{
-		echo 'login';
+		echo 'MEMBERS!';
 	}
 
 	// --------------------------------------------------------------------
@@ -61,9 +49,8 @@ class Admin extends Controller {
 
 }
 
-// END Admin class
+// END Members class
 
 
-
-/* End of file admin.php */
-/* Location: ./application/controllers/home/admin.php */
+/* End of file members.php */
+/* Location: ./application/controllers/backend/members/members.php */

@@ -12,73 +12,60 @@
 // ------------------------------------------------------------------------
 
 /**
- * Member Controller
+ * Post Model
  *
  * @package		SimplyPost
- * @subpackage	Controller
- * @category	Member Management
+ * @subpackage	Model
+ * @category	Posts
  * @author		Pascal Kriete
  */
-class Member extends AppController {
+class Post_model extends Model {
 
 	/**
 	 * Constructor
 	 *
 	 * @access	public
 	 */
-	function Member()
+	function Post_model()
 	{
-		parent::AppController();	
+		parent::Model();	
 	}
 	
 	// --------------------------------------------------------------------
 
 	/**
-	 * Member Home Page
+	 * Get Posts by parent
 	 *
 	 * @access	public
+	 * @param	parent id
 	 */
-	function index()
+	function get_by_parent($id)
 	{
-		echo 'members';
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Member Home Page
-	 *
-	 * @access	public
-	 */
-	function login()
-	{
-		$this->load->library('authentication');
 		
-		if ( $this->authentication->logged_in() )
-		{
-			if ( ! BOARD_LOCKED OR current_user('group') == 1)
-			{
-				redirect('');
-			}
-		}
-		else
-		{
-			echo 'login form';
-		}
-
-		echo 'login';
 	}
 
 	// --------------------------------------------------------------------
 
 	/**
-	 * Member Home Page
+	 * Insert Post
 	 *
 	 * @access	public
 	 */
-	function logout()
+	function insert()
 	{
-		echo 'logout';
+		// code
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Delete Post
+	 *
+	 * @access	public
+	 */
+	function delete()
+	{
+		// code
 	}
 
 	// --------------------------------------------------------------------
@@ -87,7 +74,8 @@ class Member extends AppController {
 
 }
 
-// END Member class
+// END Post_model class
 
-/* End of file member.php */
-/* Location: ./application/controllers/member/member.php */
+
+/* End of file post_model.php */
+/* Location: ./application/models/post_model.php */

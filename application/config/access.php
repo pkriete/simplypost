@@ -10,6 +10,18 @@
 */
 $config['system_locked'] = FALSE;
 
+
+/*
+|--------------------------------------------------------------------------
+| Backend Base URL
+|--------------------------------------------------------------------------
+|
+| Change this to mask the backend url.
+|
+*/
+$config['backend_base'] = 'backend';
+
+
 /*
 |--------------------------------------------------------------------------
 | Remember Me Salt
@@ -20,6 +32,7 @@ $config['system_locked'] = FALSE;
 |
 */
 $config['rem_salt']	= 'jKJiohPIOhioH89H78hjojkljioJ3895D9jWfcNKdkov58WZl0W7LhogYrD0oI8i4QpFGZDK2CBFBb3MuHPRiyrnbRbOk8Y';
+
 
 /* End of file access.php */
 /* Location: ./system/application/config/access.php */

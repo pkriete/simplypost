@@ -47,37 +47,45 @@ class SP_Router extends CI_Router {
 		{
 			return $segments;
 		}
-
-		// Not in the root, but not enough segments
-		if (count($segments) < 2)
-		{
-			//Calling the index function of a controller of the same directory...
-			//We'll cheat and just set our segment
-			$segments[1] = $segments[0];
-		}
-
-		// Does the requested controller exist as a full path including the directory?
-		if (file_exists(APPPATH.'controllers/'.$segments[0].'/'.$segments[1].EXT))
-		{
-			//Set the directory
-			$this->set_directory($segments[0]);
-			
-			//Drop the directory segment
-			$segments = array_slice($segments, 1);
-			return $segments;
-		}
 		
-		//Ok, that didn't work, let's try duplicating segment 0, maybe it's the same ;).
-		if (file_exists(APPPATH.'controllers/'.$segments[0].'/'.$segments[0].EXT))
+		// Backend is special (and I know this is ugly)
+		global $CFG;
+		
+		if ($segments[0] == $CFG->item('backend_base'))
 		{
-			//Set the directory
-			$this->set_directory($segments[0]);
-			
-			//We cheated so there's nothing to drop
-			return $segments;
+			// Not in the root, but not enough segments
+			if (count($segments) < 2)
+			{
+				//Calling the index function of a controller of the same directory...
+				//We'll cheat and just set our segment
+				$segments[1] = $segments[0];
+			}
+
+			// Does the requested controller exist as a full path including the directory?
+			if (file_exists(APPPATH.'controllers/'.$segments[0].'/'.$segments[1].EXT))
+			{
+				//Set the directory
+				$this->set_directory($segments[0]);
+
+				//Drop the directory segment
+				$segments = array_slice($segments, 1);
+				return $segments;
+			}
+
+			//Ok, that didn't work, let's try duplicating segment 1, maybe it's the same ;).
+			if (file_exists(APPPATH.'controllers/backend/'.$segments[1].'/'.$segments[1].EXT))
+			{
+				//We cheated so we need to fix the array
+				$segments[0] = $segments[1];
+				
+				//Set the directory
+				$this->set_directory('backend/'.$segments[0]);
+				
+				return $segments;
+			}
 		}
 
-		// Can't find the requested controller...
+		// Can't find the requested controller... where did frontend.php go?
 		die('Fatal Error');
 	}
 }

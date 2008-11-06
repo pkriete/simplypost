@@ -46,12 +46,10 @@ class Preferences {
 		}
 		
 		// Backend URLs
-		$backend_url = array_search('admin$1', $this->CI->router->routes);
-		$backend_url = str_replace('(.*)', '/', $backend_url);
+		$backend_url = $this->CI->config->item('backend_base');
 		
 		$this->set('backend_base_url', $backend_url);
 		$this->set('backend_login', $backend_url.'login');
-		unset($admin_url);
 	}
 
 	// --------------------------------------------------------------------
