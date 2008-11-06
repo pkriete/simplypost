@@ -23,6 +23,12 @@ system/libraries:
   type: svn
   revision: 1565
   remote: braid/system/libraries
+system/logs: 
+  squashed: true
+  url: http://dev.ellislab.com/svn/CodeIgniter/trunk/system/logs
+  type: svn
+  revision: 1230
+  remote: braid/system/logs
 system/fonts: 
   squashed: true
   url: http://dev.ellislab.com/svn/CodeIgniter/trunk/system/fonts
