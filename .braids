@@ -1,0 +1,7 @@
+--- 
+system/codeigniter: 
+  squashed: true
+  url: http://dev.ellislab.com/svn/CodeIgniter/trunk/system/codeigniter
+  type: svn
+  revision: 1528
+  remote: braid/system/codeigniter
