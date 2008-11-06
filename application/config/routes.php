@@ -43,8 +43,9 @@
 $route['default_controller'] = "main";
 $route['scaffolding_trigger'] = "";
 
-$route['admin'] = 'admin';
-$route['admin/(.*)'] = 'admin/$1';
+// This is editable if you want to hide the backend
+// Only change the part before (.*)
+$route['admin(.*)'] = 'admin$1';
 
 $route['(.+)'] = 'main';
 
