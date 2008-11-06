@@ -1,4 +1,10 @@
 --- 
+system/language: 
+  squashed: true
+  url: http://dev.ellislab.com/svn/CodeIgniter/trunk/system/language
+  type: svn
+  revision: 1492
+  remote: braid/system/language
 system/cache: 
   squashed: true
   url: http://dev.ellislab.com/svn/CodeIgniter/trunk/system/cache
