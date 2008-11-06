@@ -17,6 +17,12 @@ system/helpers:
   type: svn
   revision: 1559
   remote: braid/system/helpers
+system/libraries: 
+  squashed: true
+  url: http://dev.ellislab.com/svn/CodeIgniter/trunk/system/libraries
+  type: svn
+  revision: 1565
+  remote: braid/system/libraries
 system/fonts: 
   squashed: true
   url: http://dev.ellislab.com/svn/CodeIgniter/trunk/system/fonts
