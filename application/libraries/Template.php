@@ -48,8 +48,11 @@ class Template {
 	 */
 	function initialize($template_name)
 	{
-		$this->tmp_folder	= BASEPATH.'/../templates/'.$template_name.'/';
+		$this->tmp_folder	= APPPATH.'templates/'.$template_name.'/';
 		$paths_file			= $this->tmp_folder.'_paths'.EXT;
+		
+		$requested			= $this->CI->uri->uri_string();		
+		$requested			= trim($requested, '/');
 		
 		if ( ! is_dir($this->tmp_folder))
 		{
@@ -60,13 +63,27 @@ class Template {
 		{
 			show_error( lang('error_no_paths_file') );
 		}
-		
+
 		include($paths_file);
 		
 		// Named Paths
-		if ( ! isset($paths) OR ! is_array($paths) OR ! isset($paths['login']))
+		if (
+			! isset($paths) OR
+			! is_array($paths) OR
+			! isset($paths['home']) OR
+			! isset($paths['404']) OR
+			! isset($paths['login'])
+			)
 		{
 			show_error( lang('error_paths_incomplete') );
+		}
+		
+		$this->paths = $paths;
+		
+		// Homepage needs immediate redirect
+		if ($requested == '')
+		{
+			$requested = $this->paths['home'];
 		}
 
 		// Forced Slugs
@@ -74,16 +91,17 @@ class Template {
 		{
 			$this->slugs = $force_slug;
 			
-			if ( ! $this->_check_segments())
+			if ( ! $this->_check_segments($requested))
 			{
 				die('missing segment');
 			}
 		}
 		
-		$this->paths = $paths;
-		
 		// Looks good - load the parser
 		$this->CI->load->library('parser');
+		
+		// Return the location
+		return $requested;
 	}
 	
 	// --------------------------------------------------------------------
@@ -93,8 +111,6 @@ class Template {
 	 *
 	 * Makes sure all required templates are available
 	 * and builds an array of files to parse.
-	 *
-	 * @TODO: Template permissions
 	 *
 	 * @access	public
 	 * @param	Root template path
@@ -112,7 +128,7 @@ class Template {
 		
 		if ( ! file_exists($this->tmp_folder.$path.EXT))
 		{
-			die('cannot find template');
+			die('cannot find template '.$path);
 		}
 				
 		// Iterate through the includes and build a parsing map
@@ -160,11 +176,8 @@ class Template {
 	 * @access	public
 	 * @param	new title
 	 */
-	function _check_segments()
+	function _check_segments($requested)
 	{
-		$requested = $this->CI->uri->uri_string();
-		$requested = trim($requested, '/');
-		
 		foreach($this->slugs as $section => $slug)
 		{
 			if (preg_match('#^('.$section.')(.*)$#i', $requested))
@@ -180,6 +193,22 @@ class Template {
 		
 		// Not in there? move along.
 		return TRUE;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Path Accessor
+	 *
+	 * @access	public
+	 */
+	function get_path($key)
+	{
+		if (isset($this->paths[$key]))
+		{
+			return $this->paths[$key];
+		}
+		return FALSE;
 	}
 
 }

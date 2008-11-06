@@ -53,15 +53,12 @@ class Main extends Controller {
 		$this->load->library('preferences');
 		$this->load->library('permission');
 		$this->load->library('template');
-		
-		// We'll need to know where we are
-		$requested = $this->uri->uri_string();
-		
+
 		// Grab the template folder
 		$template_name = $this->preferences->get('template');
 		
-		// Process the template basics
-		$this->template->initialize($template_name);
+		// Process the template basics and work out where we are
+		$requested = $this->template->initialize($template_name);
 		
 		// Ok, before we start parsing stuff, a locked system goes nowhere		
 		$locked = $this->permission->_check_locked();
@@ -88,14 +85,15 @@ class Main extends Controller {
 		}
 
 		$final = $this->template->render($requested);
-		
+		$this->output->set_output($final);
+	/*	
 		echo $final;
 		die;
 		
 		echo '<pre>';
 		print_r($this->template->_processed);
 		echo '</pre>';
-		
+	*/	
 	}
 
 	// --------------------------------------------------------------------
