@@ -1,4 +1,10 @@
 --- 
+system/database: 
+  squashed: true
+  url: http://dev.ellislab.com/svn/CodeIgniter/trunk/system/database
+  type: svn
+  revision: 1555
+  remote: braid/system/database
 system/codeigniter: 
   squashed: true
   url: http://dev.ellislab.com/svn/CodeIgniter/trunk/system/codeigniter
