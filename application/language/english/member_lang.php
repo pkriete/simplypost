@@ -22,9 +22,9 @@ $lang['member_edit_profile_title']			= 'Edit Profile';
 
 // Login Vars
 $lang['login_field_required']				= 'You must enter your %s.';
-$lagn['login_username']						= 'username';
-$lang['login_email']						= 'email address';
-$lang['login_password']						= 'password';
+$lang['login_username']						= 'Username';
+$lang['login_email']						= 'Email address';
+$lang['login_password']						= 'Password';
 $lang['login_credential_missmatch']			= 'Credentials do not match';
 
 /* End of file member_lang.php */

@@ -19,7 +19,7 @@
  * @category	Controller
  * @author		Pascal Kriete
  */
-class Secure extends Controller {
+class Secure extends Backend_Controller {
 
 	/**
 	 * Constructor
@@ -28,21 +28,10 @@ class Secure extends Controller {
 	 */
 	function Secure()
 	{
-		parent::Controller();	
+		parent::Backend_Controller();
+		$this->load->library('authentication');
 	}
-	
-	// --------------------------------------------------------------------
 
-	/**
-	 * Secure Home Page
-	 *
-	 * @access	public
-	 */
-	function index()
-	{
-		echo 'secure home';
-	}
-	
 	// --------------------------------------------------------------------
 
 	/**
@@ -52,21 +41,26 @@ class Secure extends Controller {
 	 */
 	function login()
 	{
-		$this->load->library('authentication');
+		$this->load->library('form_validation');
+		$this->load->helper('form');
 		
-		if ( $this->authentication->logged_in() )
+		if ( $this->permission->logged_in() )
 		{
-			if ( ! BOARD_LOCKED OR current_user('group') == 1)
+			if (current_user('secure'))
 			{
-				redirect('');
+				// Logged in and validated session
+				redirect( backend_url('') );
 			}
+		}
+		
+		if ($this->form_validation->run('backend/login') == FALSE)
+		{
+		   	$this->load->view('secure/login');
 		}
 		else
 		{
-			echo 'login form';
-		}
-
-		echo 'login';
+			echo 'success';
+		}		
 	}
 
 	// --------------------------------------------------------------------
@@ -78,7 +72,9 @@ class Secure extends Controller {
 	 */
 	function logout()
 	{
-		echo 'logout';
+		$this->authentication->logout();
+		
+		redirect( backend_url('') );
 	}
 	
 	// --------------------------------------------------------------------

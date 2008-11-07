@@ -110,6 +110,8 @@ class Authentication {
 			// Passwords match?
 			if ($password === $result->password)
 			{
+				$result->secure = TRUE;
+				
 				// Start session, reset login count
 				$this->_fill_session($result);
 				$this->CI->tracker_model->reset_failures();
@@ -260,6 +262,8 @@ class Authentication {
 			// the cookie was tampered with
 			if ($data = $this->CI->authentication_model->get_user('member_id', $user_id, $persistent))
 			{
+				$data['secure'] = FALSE;
+				
 				// Fill the session and renew the remember me cookie
 				$this->_fill_session($data);
 				$this->_set_remember();
@@ -288,7 +292,8 @@ class Authentication {
 							'group_id'	=> 0,
 							'username'	=> 'Guest',
 							'email'		=> '',
-							'join_date'	=> 0
+							'join_date'	=> 0,
+							'secure'	=> FALSE
 		);
 		
 		// _fill_session expects an object

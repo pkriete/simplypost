@@ -44,7 +44,7 @@ class Authentication_model extends Model {
 	 * @param	integer	User ID
 	 * @param	mixed	remember_me unique token
 	 */
-	function get_user($column, $identifier, $remember_data = FALSE)
+	function get_user($column, $identifier, $rem_data = FALSE)
 	{
 		$this->db->select($this->table.'.*');
 		$this->db->select($this->db->dbprefix($this->groups_table).'.title AS user_group', FALSE);

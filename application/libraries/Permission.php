@@ -69,7 +69,7 @@ class Permission {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Protect a controller / function
+	 * Protect a backend controller / function
 	 *
 	 * Default use is to bar non-members
 	 * A user group can be specified to limit to that user group
@@ -77,22 +77,19 @@ class Permission {
 	 * @access	public
 	 * @param	string	user group
 	 */
-	function restrict($user_group = FALSE)
+	function secure_restrict()
 	{
-		if($user_group == 'guest')
+		if ( ! current_user('secure') )
 		{
-			if ($this->logged_in())
+			if ( ! $this->logged_in() )
 			{
-				redirect('');
+				$this->CI->session->set_flashdata('error', 'You must log in to see this content.');
 			}
-		}
-		else if( ! $this->logged_in())
-		{
-			redirect('/login');
-		}
-		else if ($user_group && $this->CI->user->user_group !== $user_group)
-		{
-			redirect('/login');
+			else
+			{
+				$this->CI->session->set_flashdata('msg', 'You must re-enter your password to see this content.');
+			}
+			redirect( backend_url('/secure/login') );
 		}
 	}
 	
