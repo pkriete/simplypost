@@ -46,10 +46,8 @@ class Preferences {
 		}
 		
 		// Backend URLs
-		$backend_url = $this->CI->config->item('backend_base');
-		
-		$this->set('backend_base_url', $backend_url);
-		$this->set('backend_login', $backend_url.'login');
+		$this->set('backend_base_url', backend_url('') );
+		$this->set('backend_login', backend_url('secure/login') );
 	}
 
 	// --------------------------------------------------------------------
