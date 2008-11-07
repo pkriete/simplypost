@@ -29,7 +29,11 @@ class Frontend extends Controller {
 	 */
 	function Frontend()
 	{
-		parent::Controller();	
+		parent::Controller();
+		
+		/* Frontend login?:
+		if ( ! BOARD_LOCKED OR current_user('group') == 1)
+		*/
 	}
 	
 	// --------------------------------------------------------------------
@@ -51,7 +55,6 @@ class Frontend extends Controller {
 		
 		// Load the main libraries
 		$this->load->library('preferences');
-		$this->load->library('permission');
 		$this->load->library('template');
 
 		// Grab the template folder

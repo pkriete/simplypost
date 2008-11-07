@@ -19,7 +19,7 @@
  * @category	Controller
  * @author		Pascal Kriete
  */
-class Backend extends Controller {
+class Backend extends Backend_Controller {
 
 	/**
 	 * Constructor
@@ -28,7 +28,9 @@ class Backend extends Controller {
 	 */
 	function Backend()
 	{
-		parent::Controller();	
+		parent::Backend_Controller();
+		
+		$this->permission->secure_restrict();
 	}
 
 	// --------------------------------------------------------------------
