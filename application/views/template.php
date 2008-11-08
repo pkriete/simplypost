@@ -73,7 +73,7 @@
 <div class="grid_4">
 	<div id="sidebar">
 		
-		<h3>Sections</h3>
+		<h2>Sections</h2>
 		
 		<ul>
 			<li>
