@@ -43,6 +43,11 @@ class Content extends Backend_Controller {
 	 */
 	function index()
 	{
+		$this->layout->gen_crumb(array(
+							backend_url('')			=> 'Backend',
+							backend_url('content')	=> 'Content'
+		));
+		
 		$this->layout->render('content/home');
 	}
 

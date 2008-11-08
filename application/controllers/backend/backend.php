@@ -43,6 +43,10 @@ class Backend extends Backend_Controller {
 	 */
 	function index()
 	{
+		$this->layout->gen_crumb(array(
+							backend_url('')		=> 'Backend'
+		));
+		
 	   	$this->layout->render('main/home');
 	}
 }

@@ -22,6 +22,20 @@ body {
 	background: #252c34;
 }
 
+h1, h2, h3, h4, h5, h6 {
+	font-family: georgia,serif;
+	font-weight: bold;
+	font-style: italic;
+	line-height: 1.5em;
+	letter-spacing: -1pt;
+	color: #333;
+	
+}
+
+h1 {
+	word-spacing: 3pt;
+}
+
 a {
 	text-decoration: none;
 	color: #0932d9;
@@ -37,6 +51,13 @@ a:hover {
 	background: transparent url('../images/shadow.png') repeat-x top left;
 }
 
+/* Rounded Corners */
+.r_corner {
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius:10px;
+}
+
 
 /* Unique Page Sections
 -------------------------------------------------*/
@@ -44,21 +65,32 @@ a:hover {
 /* Header */
 #header {
 	height: 83px;
-	background: transparent url('../images/header.png') repeat-x top left;
+	background: #252c34;
+}
+
+/* Logo */
+#logo {
+	margin: 1em 0 0 4em;
+}
+#logo h1 {
+	color: #eee;
+	margin: 0;
+	
+	font-size: 2.5em;
+}
+
+#logo h1 span {
+	color: #aaa;
 }
 
 /* Session */
 #session {
-	background: #f3f3f3;
+	background: #eee;
 	
 	text-align: center;
 	border: 1px solid #ccc;
 	padding: 6px;
 	margin-top: 1em;
-	
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	border-radius:10px;
 }
 
 #session_user {
@@ -84,23 +116,33 @@ a:hover {
 	background: url('../images/content_bg.png') repeat-y top left;
 }
 
+/* Breadcrumb */
+#breadcrumb {
+	color: #fff;
+	padding: 5px 10px;
+	margin: 5px 0;
+}
+
+#breadcrumb a {
+	color: #fe8c0f;
+}
+
 /* Content */
 #content {
 	padding: 0 10px;
 }
 
 #content h1 {
-	font-family: georgia,serif;
-	color: #333;
-	font-weight: bold;
-	font-style: italic;
-	line-height: 1.5em;
-	border-bottom: 1px dotted #ccc;
-	letter-spacing: -1pt;
-	word-spacing: 3pt;
+	text-align: center;
 }
 
 /* Sidebar */
+#sidebar h3 {
+	text-align: center;
+	color: #ccc;
+	margin: 2px;
+}
+
 #sidebar ul {
 	text-align: left;
 	background: #252c34;
@@ -141,10 +183,6 @@ a:hover {
 	background: url('../images/sidebar_selected.png') repeat-y top left;
 }
 
-#sidebar a.selected p {
-	color: #666;
-}
-
 #sidebar .icon {
 	padding: 0;
 	height: 24px;
@@ -167,4 +205,10 @@ a:hover {
 
 #sidebar .selected #statistics_icon {
 	background: url('../images/icons/calendar.png') no-repeat top left;
+}
+
+#footer {
+	color: #666;
+	margin-top: 1em;
+	text-align: center;
 }

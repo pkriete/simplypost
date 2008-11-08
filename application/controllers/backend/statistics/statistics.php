@@ -43,6 +43,11 @@ class Statistics extends Backend_Controller {
 	 */
 	function index()
 	{
+		$this->layout->gen_crumb(array(
+							backend_url('')				=> 'Backend',
+							backend_url('statistics')	=> 'Statistics'
+		));
+		
 		$this->layout->render('statistics/home');
 	}
 

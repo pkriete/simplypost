@@ -20,14 +20,18 @@
 </head>
 
 <body>
-	
-<div class="container_12" id="header">
-	<div class="grid_3" id="logo">
-		<h1>SimplyPost</h1>
-	</div>
 
-	<div class="grid_3 prefix_5">
-		<div id="session">
+<div class="container_12 r_corner" id="header">
+	
+	<div class="grid_3 alpha">
+		<div id="logo">
+		<h1>SimplyPost</h1>
+		</div>
+	</div>
+	<!-- End Logo -->
+
+	<div class="grid_3 prefix_5 omega">
+		<div id="session" class="r_corner">
 			<div id="session_user"><?php echo current_user('username'); ?> <span id="user_group">[Administrator]</div>
 			
 			<div id="session_links">
@@ -39,6 +43,7 @@
 			<div class="clear">&nbsp;</div>
 		</div>
 	</div>
+	<!-- End Session -->
 	<div class="clear">&nbsp;</div>
 	
 </div>
@@ -46,10 +51,17 @@
 <div class="clear">&nbsp;</div>
 
 
+<div class="container_16">
+<div class="grid_16">
+	<div id="breadcrumb" class="r_corner">
+	<?php echo $breadcrumb; ?>
+	</div>
+</div>
+</div>
+<!-- End Breadcrumb -->
+<div class="clear">&nbsp;</div>
 
 <div class="container_16" id="wrapper">
-
-<div class="grid_16 shadow">&nbsp;</div>
 
 <div class="grid_12">
 	<div id="content">
@@ -60,6 +72,9 @@
 
 <div class="grid_4">
 	<div id="sidebar">
+		
+		<h3>Backend Sections</h3>
+		
 		<ul>
 			<li>
 				<a class="<?php echo $section=='home' ? 'selected' : ''?>" href="<?php echo site_url(backend_url('')); ?>">
@@ -101,5 +116,12 @@
 
 </div>
 <!-- End Container -->
+
+<div class="container_16">
+	<div class="grid_12" id="footer">
+	Powered by SimplyPost &nbsp;| &nbsp;Copyright &copy; 2008 Pascal Kriete<br />
+	Script executed in {elapsed_time} using {memory_usage}
+	</div>
+</div>
 </body>
 </html>

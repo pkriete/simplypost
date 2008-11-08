@@ -28,7 +28,7 @@ class Layout {
 	var $section	= '';
 	var $breadcrumb	= '';
 	
-	var $root_url	= '/';
+	var $root_url;
 	var $root_text	= 'Home';
 	
 	/**
@@ -42,6 +42,7 @@ class Layout {
 		log_message('debug', "Layout Class Initialized");
 		
 		$this->CI->load->helper('html');
+		$this->root_url = site_url('');
 	}
 	
 	// --------------------------------------------------------------------
@@ -90,15 +91,7 @@ class Layout {
 
 			foreach($front as $url => $title)
 			{
-				if ( ! async_request())
-				{
-					$url = str_replace('/', '_', $url);
-					$this->breadcrumb .= '&nbsp; &rsaquo; &nbsp;<a href="#'.$url.'">'.$title.'</a>';
-				}
-				else
-				{
-					$this->breadcrumb .= '&nbsp; &rsaquo; &nbsp;'.anchor($url, $title);
-				}
+				$this->breadcrumb .= '&nbsp; &rsaquo; &nbsp;'.anchor($url, $title);
 			}
 						
 			$this->breadcrumb .= '&nbsp; &rsaquo; &nbsp;'.current($end);
