@@ -1,0 +1,39 @@
+table {
+	width: 99%;
+	position: relative;
+}
+
+table tr td
+{
+	padding: 5px 6px 5px 6px; 
+	border-bottom: 1px solid #ccc;
+}
+
+table tr th
+{
+	color: #e5e5e5;
+	text-align: left;
+	font-weight: bold;
+	padding: 7px 6px 7px 6px;
+	background-color: #252c34;
+}
+
+table tr.switch
+{
+	background-color: #f5f5ee;
+}
+
+table td.true
+{
+	color: #009933;
+}
+
+table td.false
+{
+	color: #990000;
+}
+
+table tr:hover
+{
+	background-color: #ffffe4;
+}

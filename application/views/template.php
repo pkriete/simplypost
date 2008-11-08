@@ -15,7 +15,8 @@
 	<?php echo link_tag( backend_url('assets/css/grid/reset') )."\n"; ?>
 	<?php echo link_tag( backend_url('assets/css/grid/960') )."\n"; ?>
 	<?php echo link_tag( backend_url('assets/css/grid/text') )."\n"; ?>
-	<?php echo link_tag( backend_url('assets/css/site') )."\n"; ?>
+	<?php echo link_tag( backend_url('assets/css/backend') )."\n"; ?>
+	<?php echo link_tag( backend_url('assets/css/tables') )."\n"; ?>
 	
 </head>
 

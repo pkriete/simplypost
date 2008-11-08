@@ -41,7 +41,6 @@ class Layout {
 		$this->CI =& get_instance();
 		log_message('debug', "Layout Class Initialized");
 		
-		$this->CI->load->helper('html');
 		$this->root_url = site_url('');
 	}
 	

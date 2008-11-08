@@ -19,8 +19,10 @@
  * @author		Pascal Kriete
  */
 
-
 class Member_model extends Model {
+	
+	var $table				= 'members';
+	var $groups_table		= 'groups';
 	
 	/**
 	 * Constructor
@@ -34,9 +36,23 @@ class Member_model extends Model {
 	
 	// --------------------------------------------------------------------
 	
-	// ================================
-	// = ========== UPDATE ========== =
-	// ================================
+	/**
+	 * Get all users
+	 *
+	 * @access	private
+	 * @return	bool
+	 */
+	function get_all()
+	{
+		$this->db->select($this->table.'.*');
+		$this->db->select($this->db->dbprefix($this->groups_table).'.title AS user_group', FALSE);
+		$this->db->join($this->groups_table, $this->groups_table.'.group_id = '.$this->table.'.group_id');
+
+		$query = $this->db->get($this->table);
+		return ($query->num_rows() > 0) ? $query->result() : FALSE;
+	}
+	
+	// --------------------------------------------------------------------
 	
 	/**
 	 * Insert New Password
@@ -108,11 +124,9 @@ class Member_model extends Model {
 		$this->db->where('user_id', current_user('id'));
 		$this->db->update($this->table, $data);
 	}
-		
-	// ================================
-	// = ========== DELETE ========== =
-	// ================================
 	
+	// --------------------------------------------------------------------
+
 	/**
 	 * Delete a user
 	 *
@@ -122,58 +136,8 @@ class Member_model extends Model {
 	{
 		$this->db->delete($this->table, array('user_id' => $id));
 	}
-	
-	// ================================
-	// = ========== OTHERS ========== =
-	// ================================
-
-
 
 }
-
-class Member_model extends Model {
-
-
-	/**
-	 * Get Members
-	 *
-	 * @access	public
-	 */
-	function get()
-	{
-		
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Insert Member
-	 *
-	 * @access	public
-	 */
-	function insert()
-	{
-		// code
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Delete Member
-	 *
-	 * @access	public
-	 */
-	function delete()
-	{
-		// code
-	}
-
-	// --------------------------------------------------------------------
-
-	
-
-}
-
 // END Member_model class
 
 
