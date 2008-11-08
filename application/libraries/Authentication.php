@@ -320,7 +320,8 @@ class Authentication {
 						'group'			=> 'group_id',
 						'username'		=> 'username',
 						'email'			=> 'email',
-						'join_date'		=> 'join_date'
+						'join_date'		=> 'join_date',
+						'secure'		=> 'secure'
 						);
 
 		// Ensure that all the fields we set are actually there

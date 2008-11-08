@@ -47,7 +47,7 @@ class Preferences {
 		
 		// Backend URLs
 		$this->set('backend_base_url', backend_url('') );
-		$this->set('backend_login', backend_url('secure/login') );
+		$this->set('backend_login', backend_url('session/login') );
 	}
 
 	// --------------------------------------------------------------------

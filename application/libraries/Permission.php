@@ -89,7 +89,7 @@ class Permission {
 			{
 				$this->CI->session->set_flashdata('msg', 'You must re-enter your password to see this content.');
 			}
-			redirect( backend_url('/secure/login') );
+			redirect( backend_url('/session/login') );
 		}
 	}
 	

@@ -19,6 +19,5 @@ function backend_url($segments)
 	return $base . '/' . trim($segments, '/');
 }
 
-
 /* End of file SP_url_helper.php */
 /* Location: ./application/helpers/SP_url_helper.php */

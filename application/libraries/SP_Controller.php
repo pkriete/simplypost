@@ -33,6 +33,7 @@ class Backend_Controller extends Controller {
 		$this->input->require_csrf_token();
 		
 		$this->lang->load('member');
+		$this->load->library('layout');
 	}
 
 	// --------------------------------------------------------------------

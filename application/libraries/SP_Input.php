@@ -74,7 +74,7 @@ class SP_Input extends CI_Input {
 			if( $err )
 			{
 				$E =& load_class('Exceptions');
-				echo $E->show_error('<strong>Server Error:</strong> '.$err, 'Hit the back button to try again.  Clear your cookies if you see this message repeatedly.');
+				echo $E->show_error('<strong>Server Error:</strong> '.$err, '<p>' . anchor( current_url(), 'Try Again') . '</p>Clear your cookies if you see this message repeatedly.');
 				die;
 			}
 		}
