@@ -29,8 +29,9 @@ class Backend extends Backend_Controller {
 	function Backend()
 	{
 		parent::Backend_Controller();
-		
+
 		$this->permission->secure_restrict();
+		$this->layout->set_section('home');
 	}
 
 	// --------------------------------------------------------------------
@@ -42,22 +43,8 @@ class Backend extends Backend_Controller {
 	 */
 	function index()
 	{
-		echo 'backend home';
+	   	$this->layout->render('main/home');
 	}
-	
-	// --------------------------------------------------------------------
-
-	/**
-	 * Backend Info Page
-	 *
-	 * @access	public
-	 */
-	function info()
-	{
-		echo 'backend info';
-	}
-	
-
 }
 
 // END Backend class

@@ -19,14 +19,14 @@
  * @category	Controller
  * @author		Pascal Kriete
  */
-class Secure extends Backend_Controller {
+class Session extends Backend_Controller {
 
 	/**
 	 * Constructor
 	 *
 	 * @access	public
 	 */
-	function Secure()
+	function Session()
 	{
 		parent::Backend_Controller();
 		$this->load->library('authentication');
@@ -46,20 +46,20 @@ class Secure extends Backend_Controller {
 		
 		if ( $this->permission->logged_in() )
 		{
-			if (current_user('secure'))
+			if (current_user('session'))
 			{
-				// Logged in and validated session
 				redirect( backend_url('') );
 			}
 		}
 		
 		if ($this->form_validation->run('backend/login') == FALSE)
 		{
-		   	$this->load->view('secure/login');
+			$this->layout->set_title('Login');
+		   	$this->layout->render('session/login');
 		}
 		else
 		{
-			echo 'success';
+			redirect( backend_url('') );
 		}		
 	}
 
@@ -73,7 +73,6 @@ class Secure extends Backend_Controller {
 	function logout()
 	{
 		$this->authentication->logout();
-		
 		redirect( backend_url('') );
 	}
 	
@@ -82,8 +81,7 @@ class Secure extends Backend_Controller {
 
 }
 
-// END Secure class
+// END Session class
 
-
-/* End of file secure.php */
-/* Location: ./application/controllers/backend/secure.php */
+/* End of file session.php */
+/* Location: ./application/controllers/backend/session.php */

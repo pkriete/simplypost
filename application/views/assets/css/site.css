@@ -1,0 +1,170 @@
+/* Colors
+ * =================
+ * Background
+ * color: #252c34;
+ *
+ * Green Link
+ * color: #32Da09;
+ *
+ * Red Link
+ * color: #d90932;
+ *
+ * Blue Link
+ * color: #0932d9;
+ *
+ */
+
+
+/* General Elements
+-------------------------------------------------*/
+
+body {
+	background: #252c34;
+}
+
+a {
+	text-decoration: none;
+	color: #0932d9;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+/* Drop Shadow */
+.shadow {
+	height: 8px;
+	background: transparent url('../images/shadow.png') repeat-x top left;
+}
+
+
+/* Unique Page Sections
+-------------------------------------------------*/
+
+/* Header */
+#header {
+	height: 83px;
+	background: transparent url('../images/header.png') repeat-x top left;
+}
+
+/* Session */
+#session {
+	background: #f3f3f3;
+	
+	text-align: center;
+	border: 1px solid #ccc;
+	padding: 6px;
+	margin-top: 1em;
+	
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius:10px;
+}
+
+#session_user {
+	font-weight: bold;
+}
+
+#session #user_group {
+	font-weight: normal;
+	color: #888;
+	font-size: 85%;
+}
+
+#session #session_links {
+	padding-top: 0.4em;
+}
+
+#session #logout {
+	color: #d90932;
+}
+
+/* Wrapper */
+#wrapper {
+	background: url('../images/content_bg.png') repeat-y top left;
+}
+
+/* Content */
+#content {
+	padding: 0 10px;
+}
+
+#content h1 {
+	font-family: georgia,serif;
+	color: #333;
+	font-weight: bold;
+	font-style: italic;
+	line-height: 1.5em;
+	border-bottom: 1px dotted #ccc;
+	letter-spacing: -1pt;
+	word-spacing: 3pt;
+}
+
+/* Sidebar */
+#sidebar ul {
+	text-align: left;
+	background: #252c34;
+	
+	font-size: 110%;
+	list-style: none;
+}
+
+#sidebar ul li {
+	margin: 0;
+}
+
+#sidebar a {
+	color: #ccc;
+	padding: 10px 0 10px 15px;
+	display: block;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+#sidebar a p {
+	color: #666;
+	font-size: 90%;
+	font-weight: normal;
+	margin: 0;
+}
+
+#sidebar a:hover {
+	color: #ddd;
+}
+
+#sidebar a:hover p {
+	color: #aaa;
+}
+
+#sidebar a.selected {
+	color: #333;
+	background: url('../images/sidebar_selected.png') repeat-y top left;
+}
+
+#sidebar a.selected p {
+	color: #666;
+}
+
+#sidebar .icon {
+	padding: 0;
+	height: 24px;
+	width: 24px;
+	float: right;
+	margin: 6px 10px 0 0;
+}
+
+#sidebar .selected #home_icon {
+	background: url('../images/icons/home.png') no-repeat top left;
+}
+
+#sidebar .selected #content_icon {
+	background: url('../images/icons/pencil.png') no-repeat top left;
+}
+
+#sidebar .selected #member_icon {
+	background: url('../images/icons/members.png') no-repeat top left;
+}
+
+#sidebar .selected #statistics_icon {
+	background: url('../images/icons/calendar.png') no-repeat top left;
+}

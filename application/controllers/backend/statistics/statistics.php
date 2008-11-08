@@ -12,38 +12,38 @@
 // ------------------------------------------------------------------------
 
 /**
- * Member Management Controller
+ * Statistics Controller
  *
  * @package		SimplyPost
- * @subpackage	Backend - Members
+ * @subpackage	Backend - Stats
  * @category	Controller
  * @author		Pascal Kriete
  */
-class Members extends Backend_Controller {
+class Statistics extends Backend_Controller {
 
 	/**
 	 * Constructor
 	 *
 	 * @access	public
 	 */
-	function Members()
+	function Statistics()
 	{
 		parent::Backend_Controller();
 		
 		$this->permission->secure_restrict();
-		$this->layout->set_section('members');
+		$this->layout->set_section('statistics');
 	}
 	
 	// --------------------------------------------------------------------
 
 	/**
-	 * Member Home Page
+	 * Statistics Home Page
 	 *
 	 * @access	public
 	 */
 	function index()
 	{
-	   	$this->layout->render('members/home');
+		$this->layout->render('statistics/home');
 	}
 
 	// --------------------------------------------------------------------
@@ -52,8 +52,8 @@ class Members extends Backend_Controller {
 
 }
 
-// END Members class
+// END Statistics class
 
 
-/* End of file members.php */
-/* Location: ./application/controllers/backend/members/members.php */
+/* End of file statistics.php */
+/* Location: ./application/controllers/backend/statistics/statistics.php */

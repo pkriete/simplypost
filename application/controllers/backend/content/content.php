@@ -12,38 +12,38 @@
 // ------------------------------------------------------------------------
 
 /**
- * Member Management Controller
+ * Content Management Controller
  *
  * @package		SimplyPost
- * @subpackage	Backend - Members
+ * @subpackage	Backend -Content
  * @category	Controller
  * @author		Pascal Kriete
  */
-class Members extends Backend_Controller {
+class Content extends Backend_Controller {
 
 	/**
 	 * Constructor
 	 *
 	 * @access	public
 	 */
-	function Members()
+	function Content()
 	{
 		parent::Backend_Controller();
 		
 		$this->permission->secure_restrict();
-		$this->layout->set_section('members');
+		$this->layout->set_section('content');
 	}
 	
 	// --------------------------------------------------------------------
 
 	/**
-	 * Member Home Page
+	 * Content Home Page
 	 *
 	 * @access	public
 	 */
 	function index()
 	{
-	   	$this->layout->render('members/home');
+		$this->layout->render('content/home');
 	}
 
 	// --------------------------------------------------------------------
@@ -52,8 +52,8 @@ class Members extends Backend_Controller {
 
 }
 
-// END Members class
+// END Content class
 
 
-/* End of file members.php */
-/* Location: ./application/controllers/backend/members/members.php */
+/* End of file content.php */
+/* Location: ./application/controllers/backend/content/content.php */
