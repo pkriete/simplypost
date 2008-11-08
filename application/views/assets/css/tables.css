@@ -25,12 +25,12 @@ table tr.switch
 
 table td.true
 {
-	color: #009933;
+	color: #32da09;
 }
 
 table td.false
 {
-	color: #990000;
+	color: #d90932;
 }
 
 table tr:hover
