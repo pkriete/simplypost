@@ -178,6 +178,10 @@ a:hover {
 	color: #aaa;
 }
 
+#sidebar a.selected:hover p {
+	color: #666;
+}
+
 #sidebar a.selected {
 	color: #333;
 	background: url('../images/sidebar_selected.png') repeat-y top left;
@@ -201,6 +205,10 @@ a:hover {
 
 #sidebar .selected #member_icon {
 	background: url('../images/icons/members.png') no-repeat top left;
+}
+
+#sidebar .selected #settings_icon {
+	background: url('../images/icons/wrench.png') no-repeat top left;
 }
 
 #sidebar .selected #statistics_icon {

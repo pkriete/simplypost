@@ -288,12 +288,13 @@ class Authentication {
 	function _create_guest()
 	{
 		$guest_data = array(
-							'user_id'	=> 0,
-							'group_id'	=> 0,
-							'username'	=> 'Guest',
-							'email'		=> '',
-							'join_date'	=> 0,
-							'secure'	=> FALSE
+							'user_id'		=> 0,
+							'group_id'		=> 0,
+							'username'		=> 'Unknown User',
+							'user_group'	=> 'Guest',
+							'email'			=> '',
+							'join_date'		=> 0,
+							'secure'		=> FALSE
 		);
 		
 		// _fill_session expects an object
@@ -318,6 +319,7 @@ class Authentication {
 		$member_keys = array(
 						'id'			=> 'user_id',
 						'group'			=> 'group_id',
+						'user_group'	=> 'user_group',
 						'username'		=> 'username',
 						'email'			=> 'email',
 						'join_date'		=> 'join_date',

@@ -32,7 +32,7 @@
 
 	<div class="grid_3 prefix_5 omega">
 		<div id="session" class="r_corner">
-			<div id="session_user"><?php echo current_user('username'); ?> <span id="user_group">[Administrator]</div>
+			<div id="session_user"><?php echo current_user('username'); ?> <span id="user_group">[<?php echo ucfirst(current_user('user_group')); ?>]</div>
 			
 			<div id="session_links">
 				<?php echo anchor( backend_url('member/account'), 'Account'); ?> |
@@ -87,7 +87,7 @@
 				<a class="<?php echo $section=='content' ? 'selected' : ''?>" href="<?php echo site_url(backend_url('content')); ?>">
 					<div class="icon" id="content_icon"></div>
 					Content
-					<p>Styles, Permissions, etc</p>
+					<p>Bulk Operations, etc</p>
 				</a>
 			</li>
 			<li>
@@ -95,6 +95,13 @@
 					<div class="icon" id="member_icon"></div>
 					Members
 					<p>Create, Ban, Delete</p>
+				</a>
+			</li>
+			<li>
+				<a class="<?php echo $section=='settings' ? 'selected' : ''?>" href="<?php echo site_url(backend_url('settings')); ?>">
+					<div class="icon" id="settings_icon"></div>
+					Settings
+					<p>Global Board Settings</p>
 				</a>
 			</li>
 			<li>
