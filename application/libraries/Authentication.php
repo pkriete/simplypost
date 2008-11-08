@@ -317,7 +317,7 @@ class Authentication {
 		
 		// Key -> field_name relationships
 		$member_keys = array(
-						'id'			=> 'user_id',
+						'id'			=> 'member_id',
 						'group'			=> 'group_id',
 						'user_group'	=> 'user_group',
 						'username'		=> 'username',

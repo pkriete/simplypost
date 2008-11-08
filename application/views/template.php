@@ -35,8 +35,8 @@
 			<div id="session_user"><?php echo current_user('username'); ?> <span id="user_group">[<?php echo ucfirst(current_user('user_group')); ?>]</div>
 			
 			<div id="session_links">
-				<?php echo anchor( backend_url('member/account'), 'Account'); ?> |
-				<?php echo anchor( backend_url('member/profile'), 'Profile'); ?> |
+				<?php echo anchor( backend_url('members/account/'.current_user('id')), 'Account'); ?> |
+				<?php echo anchor( backend_url('members/profile/'.current_user('id')), 'Profile'); ?> |
 				<?php echo anchor( backend_url('session/logout'), 'Logout', array('id' => 'logout')); ?>
 			</div>
 			
@@ -73,7 +73,7 @@
 <div class="grid_4">
 	<div id="sidebar">
 		
-		<h3>Backend Sections</h3>
+		<h3>Sections</h3>
 		
 		<ul>
 			<li>

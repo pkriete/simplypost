@@ -23,17 +23,29 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-	font-family: georgia,serif;
+	line-height: 1.5em;
+}
+
+h2, h3, h4, h5, h6 {
+	color: #252c34;
+	font-family: HelveticaNeue, "Helvetica Neue", Helvetica, Arial, 'Liberation Sans', FreeSans, sans-serif; /* what a font stack :P */
+	font-weight: normal;
+	margin-bottom: 3px;
+	
+	text-shadow: 0 0 0 #fff;	/* remove blur */
+}
+
+h1, #sidebar h3 {
+	font-family: georgia, serif;
 	font-weight: bold;
 	font-style: italic;
 	line-height: 1.5em;
-	letter-spacing: -1pt;
+	letter-spacing: -1pt;	/* cursive look */
 	color: #333;
-	
 }
 
 h1 {
-	word-spacing: 3pt;
+	word-spacing: 3pt;	/* was too squished */
 }
 
 a {
@@ -43,12 +55,6 @@ a {
 
 a:hover {
 	text-decoration: underline;
-}
-
-/* Drop Shadow */
-.shadow {
-	height: 8px;
-	background: transparent url('../images/shadow.png') repeat-x top left;
 }
 
 /* Rounded Corners */
@@ -68,20 +74,22 @@ a:hover {
 	background: #252c34;
 }
 
+
 /* Logo */
 #logo {
 	margin: 1em 0 0 4em;
 }
+
 #logo h1 {
 	color: #eee;
 	margin: 0;
-	
 	font-size: 2.5em;
 }
 
 #logo h1 span {
 	color: #aaa;
 }
+
 
 /* Session */
 #session {
@@ -111,10 +119,12 @@ a:hover {
 	color: #d90932;
 }
 
+
 /* Wrapper */
 #wrapper {
 	background: url('../images/content_bg.png') repeat-y top left;
 }
+
 
 /* Breadcrumb */
 #breadcrumb {
@@ -127,6 +137,7 @@ a:hover {
 	color: #fe8c0f;
 }
 
+
 /* Content */
 #content {
 	padding: 0 10px;
@@ -135,6 +146,7 @@ a:hover {
 #content h1 {
 	text-align: center;
 }
+
 
 /* Sidebar */
 #sidebar h3 {
@@ -215,6 +227,8 @@ a:hover {
 	background: url('../images/icons/calendar.png') no-repeat top left;
 }
 
+
+/* Footer */
 #footer {
 	color: #666;
 	margin-top: 1em;
