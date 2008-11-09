@@ -79,7 +79,7 @@ $autoload['plugin'] = array();
 |
 */
 
-$autoload['config'] = array();	// access loaded in config/routes.php
+$autoload['config'] = array();	// 'simplypost' loaded in config/routes.php
 
 
 /*

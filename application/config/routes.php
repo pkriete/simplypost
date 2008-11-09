@@ -53,7 +53,7 @@
 |
 */
 $CFG =& load_class('Config');
-$CFG->load('access');
+$CFG->load('simplypost');
 
 $backend_url = $CFG->item('backend_base');
 
