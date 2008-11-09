@@ -1,3 +1,4 @@
+<div id="login_div">
 <h2>Login</h2>
 
 <p><?php echo validation_errors(); ?></p>
@@ -14,4 +15,6 @@
 </p>
 <p>
 	<?php echo form_submit('submit', 'Submit'); ?>
+</p>
 <?php echo form_close(); ?>
+</div>

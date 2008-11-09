@@ -1,9 +1,9 @@
-{nest:header title="Show Category"}
+{nest:global/header title="Show Category"}
 
 {category}
 
-	<h1>{c:title}</h1>
-	<p>{c:description}</p>
+	<h1>{title}</h1>
+	<p>{description}</p>
 	
 	{forums}
 	<div class="forum">
@@ -14,4 +14,4 @@
 	
 {/category}
 
-{nest:footer}
+{nest:global/footer}

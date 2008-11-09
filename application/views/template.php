@@ -31,6 +31,7 @@
 	</div>
 	<!-- End Logo -->
 
+<?php if($logged_in): ?>
 	<div class="grid_3 prefix_5 omega">
 		<div id="session" class="r_corner">
 			<div id="session_user"><?php echo current_user('username'); ?> <span id="user_group">[<?php echo ucfirst(current_user('user_group')); ?>]</div>
@@ -45,6 +46,7 @@
 		</div>
 	</div>
 	<!-- End Session -->
+<?php endif; ?>
 	<div class="clear">&nbsp;</div>
 	
 </div>
@@ -64,13 +66,18 @@
 
 <div class="container_16" id="wrapper">
 
+<?php if ($logged_in): ?>
 <div class="grid_12">
-	<div id="content">
+<?php else: // @TODO: Move to stylesheet ?>
+<div class="grid_16" style="background: #252c34; text-align: center;">
+<?php endif; ?>
+	<div id="content">	
 		<?php $this->load->view($content); ?>
 	</div>
 </div>
 <!-- End Content -->
 
+<?php if ($logged_in): ?>
 <div class="grid_4">
 	<div id="sidebar">
 		
@@ -115,7 +122,10 @@
 		</ul>
 	</div>
 </div>
+
 <!-- End Sidebar -->
+<?php endif; ?>
+
 <div class="clear">&nbsp;</div>
 
 </div>
@@ -126,7 +136,7 @@
 <!-- End Container -->
 
 <div class="container_16">
-	<div class="grid_12" id="footer">
+	<div class="<?php echo ($logged_in) ? 'grid_12' : 'grid_16'; ?>" id="footer">
 	Powered by SimplyPost &nbsp;| &nbsp;Copyright &copy; 2008 Pascal Kriete<br />
 	Script executed in {elapsed_time} using {memory_usage}
 	</div>

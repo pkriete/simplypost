@@ -176,6 +176,8 @@ class Layout {
 	function render($view, $data = array())
 	{
 		$data = array_merge(array(
+					'logged_in'		=> $this->CI->permission->logged_in(),
+			
 					'title'			=> $this->title,
 					'breadcrumb'	=> $this->breadcrumb,
 					'section'		=> $this->section,
