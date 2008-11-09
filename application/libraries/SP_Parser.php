@@ -26,8 +26,13 @@ class SP_Parser extends CI_Parser {
 		define(T_OPEN, $this->l_delim);
 		define(T_CLOSE, $this->r_delim);
 		
-		$this->dynamic_parsed = FALSE;
-		$this->dynamic = array('category', 'forum', 'thread', 'post', 'member');
+		$this->dynamic = array(
+								'category',
+								'forum',
+								'thread',
+								'post',
+								'member'
+								);
 
 		// The dynamic content needs an id			
 		$id = end($this->CI->uri->segment_array());
@@ -43,6 +48,9 @@ class SP_Parser extends CI_Parser {
 	 */
 	function parse($text, $nest_vars = array())
 	{
+		// New one for each template
+		$this->db_store = array();
+		
 		// Start out by eval'ing normal php to allow for
 		// complex logic that the parser cannot handle
 		$text = $this->_parse_php($text);
