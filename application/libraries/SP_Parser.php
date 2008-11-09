@@ -3,7 +3,10 @@
 class SP_Parser extends CI_Parser {
 
 	var $CI;
-	var $globals = array();
+	var $id;
+
+	var $dynamic_parsed = FALSE;
+	var $dynamic = array('category', 'forum', 'thread', 'post', 'member');
 
 	/**
 	 * Constructor
@@ -13,6 +16,11 @@ class SP_Parser extends CI_Parser {
 	function SP_Parser()
 	{
 		$this->CI =& get_instance();
+		
+		// $this->delim is just too much typing
+		// ditch them, but still use them
+		define(T_OPEN, $this->l_delim);
+		define(T_CLOSE, $this->r_delim);
 	}
 	
 	// --------------------------------------------------------------------
@@ -35,19 +43,18 @@ class SP_Parser extends CI_Parser {
 		
 		// Conditionals that use the globals
 		$text = $this->_conditionals($text);
-
+		
 		// The dynamic content needs an id			
 		$id = end($this->CI->uri->segment_array());
-		$id = is_numeric($id) ? $id : FALSE;
+		$this->id = is_numeric($id) ? $id : FALSE;
 		
-		// Parse the db content - lots of work get's done here
-		$text = $this->_db_content($text, $id);
-		
+		// Start parsing the pairs
+		$text = $this->_find_pairs($text);
+
 		// Last conditional run
 		$text = $this->_conditionals($text);
 		
 		// Nested optionals?
-		
 		return $text;
 	}
 
@@ -102,8 +109,7 @@ class SP_Parser extends CI_Parser {
 			$text = $this->_parse_single($key, (string)$val, $text);
 		}
 		
-		// Add them to the global array so other parsers can use them
-		$this->_set_global($simple_tags);
+		// Free up memory
 		unset($simple_tags);
 		
 		return $text;
@@ -112,77 +118,92 @@ class SP_Parser extends CI_Parser {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Parse the dynamic [read:automagic from url] tags
+	 * Find pairs and parse them accordingly
 	 *
 	 * @access	public
 	 */
-	function _db_content($text, $id = FALSE)
+	function _find_pairs($text)
 	{
-		$db_content = array(
+		$pairs = array(
 			'category',
 			'forum',
+			'forums',
 			'thread',
+			'threads',
 			'post',
 			'member'
 		);
-
-		// Only want to look for dynamic stuff once
-		$dynamic_parsed = FALSE;
-
-		foreach($db_content as $node_type)
-		{
-			// Regular expression patterns
-			$optional = '(?: (.+?))?';
-			$dynamic = "#{" . $node_type . $optional . "}(.+?){" . '/'.$node_type . "}#is";
-			$static = "#{" . $node_type . ':(\d+)' . $optional . "}(.+?){" . '/'.$node_type . "}#is";
-			
-			// Parsing function for this node type
-			$pf = '_parse_'.$node_type;
-			
-			// If there is no id or we've found a dynamic one - skip it
-			if (is_numeric($id) && ! $dynamic_parsed)
-			{
-				// Dynamic content
-				if ( preg_match_all($dynamic, $text, $matches))
-				{
-					// First and last dynamic one
-					$dynamic_parsed = TRUE;
-					
-					foreach($matches[0] as $key => $full_match)
-					{
-						$optional	= $matches[1][$key];
-						$inner		= $matches[2][$key];
-
-						$optional = $this->_split_optional($optional);
-						
-						$replace = $this->$pf($inner, $optional, $id);
-						$text = str_replace($full_match, $replace, $text);
-					}
-				}
-			}
-			
-			// Static content
-			if ( preg_match_all($static, $text, $matches))
-			{
-				foreach($matches[0] as $key => $full_match)
-				{
-					$id			= $matches[1][$key];
-					$optional	= $matches[2][$key];
-					$inner		= $matches[3][$key];
-					
-					$optional = $this->_split_optional($optional);
-					
-					$replace = $this->$pf($inner, $optional, $id);
-					$text = str_replace($full_match, $replace, $text);
-				}
-			}
-		}
 		
-		return $text;
+		$tag_name = '('.implode('|', $pairs).')';
+		$optional = '(?: (.+?))?';
+		$parameter = '(?:[:](\d+))?';
+
+		// One regex to rule them all
+		$regex = "#" . T_OPEN . $tag_name . $parameter . $optional . T_CLOSE . "(.+?)" . T_OPEN . '/\\1' . T_CLOSE. "#is";
+
+		return preg_replace_callback($regex, array($this, '_handle_pairs'), $text);
 	}
 	
 	// --------------------------------------------------------------------
 	
+	/**
+	 * Handle the inner parsing for each pair
+	 *
+	 * @access	public
+	 */
+	function _handle_pairs($matches)
+	{
+		// For readability
+		$text = $matches[0];
+		$tag = $matches[1];
+		$param = $matches[2];
+		$optional = $matches[3];
+		$inner = $matches[4];
+		
+		// The function that will do the heavy lifting
+		$pf = '_parse_'.$tag;
+		
+		if (! method_exists($this, $pf))
+		{
+			// Unknown tag - do nothing
+			return $text;
+		}
+		
+		// If it's in the dynamic list, it needs an id of some sort.
+		// The first time we use the function parameter (url id)
+		// after that it must have a :id to be parsed
+		if (in_array($tag, $this->dynamic))
+		{
+			// No parameter, check dynamic
+			if ( ! $param)
+			{
+				
+				// Dynamic gone or we have no id? Skip
+				if ($this->dynamic_parsed || ! $this->id)
+				{
+					return $text;
+				}
+				else
+				{
+					// This will be a the dynamic one
+					$this->dynamic_parsed = TRUE;
+					$id = $this->id;
+				}
+			}
+			else
+			{
+				$id = $param;
+			}
+		}
+		
+		// Make an optionals array
+		$optional = $this->_split_optional($optional);
+		
+		return $this->$pf($inner, $optional, $id);
+	}
+	
+	// --------------------------------------------------------------------
+
 	/**
 	 * Parse the category tags
 	 *
@@ -298,7 +319,6 @@ class SP_Parser extends CI_Parser {
 			
 			$text = $this->_parse_single($tmp_key, (string)$tmp_val, $text);
 		}
-		
 		return $text;
 	}
 
@@ -394,39 +414,6 @@ class SP_Parser extends CI_Parser {
 		@ob_end_clean();
 
 		return $text;
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Add parsed tags to the globals array
-	 *
-	 * @access	private
-	 */
-	function _set_global($key, $val = FALSE)
-	{
-		if (is_array($key))
-		{
-			$this->globals = array_merge($this->globals, $key);
-			return;
-		}
-		$this->globals[$key] = $value;
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Returns the value of the parsed tag
-	 *
-	 * @access	private
-	 */
-	function _get_global($key)
-	{
-		if (isset($this->globals[$key]))
-		{
-			return $this->globals[$key];
-		}
-		return FALSE;
 	}
 	
 	// --------------------------------------------------------------------
