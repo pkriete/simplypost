@@ -54,7 +54,7 @@ class SP_Input extends CI_Input {
 			// Grab the transaction signature data from various sources
 			$sig	= $this->cookie('act_s');
 			$req	= $this->post('act_s');
-			$dt		= $_SERVER['REQUEST_TIME'] - $CI->session->userdata('token_time');
+			$dt		= $CI->config->item('request_time') - $CI->session->userdata('token_time');
 			
 			$err = FALSE;
 			
@@ -103,7 +103,7 @@ class SP_Input extends CI_Input {
 		// Store relevant data
 		$this->csrf_token = $token;
 		set_cookie('act_s', $token, 2*60*60);
-		$CI->session->set_userdata('token_time', $_SERVER['REQUEST_TIME']);
+		$CI->session->set_userdata('token_time', $CI->config->item('request_time'));
 	}
 	
 	// --------------------------------------------------------------------

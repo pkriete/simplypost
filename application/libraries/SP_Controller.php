@@ -59,7 +59,7 @@ class Backend_Controller extends Controller {
 
 			// Store relevant data
 			set_cookie('act_s', $csrf_token, 2*60*60);
-			$this->session->set_userdata('token_time', $_SERVER['REQUEST_TIME']);
+			$this->session->set_userdata('token_time', $this->config->item('request_time'));
 		}
 		else
 		{
