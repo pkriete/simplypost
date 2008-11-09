@@ -9,6 +9,7 @@
 	<div class="forum">
 		<h3>{f:title}</h3>
 		<p>{f:description}</p>
+		<a href="{url:a/b path='404'}">Here</a>
 	</div>
 	{/forums}
 	

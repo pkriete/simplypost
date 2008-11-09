@@ -3,10 +3,12 @@
 class SP_Parser extends CI_Parser {
 
 	var $CI;
-	var $id;
+	var $id;						// id as extracted from the url
 
-	var $dynamic_parsed = FALSE;
-	var $dynamic = array('category', 'forum', 'thread', 'post', 'member');
+	var $dynamic_parsed = FALSE;	// boolean to limit dynamic parsing
+	var $dynamic = array();			// array of dynamic tags
+	
+	var $db_store = array();		// store db data until post parse
 
 	/**
 	 * Constructor
@@ -17,10 +19,19 @@ class SP_Parser extends CI_Parser {
 	{
 		$this->CI =& get_instance();
 		
+		$this->CI->load->library('parsers/singles');
+
 		// $this->delim is just too much typing
 		// ditch them, but still use them
 		define(T_OPEN, $this->l_delim);
 		define(T_CLOSE, $this->r_delim);
+		
+		$this->dynamic_parsed = FALSE;
+		$this->dynamic = array('category', 'forum', 'thread', 'post', 'member');
+
+		// The dynamic content needs an id			
+		$id = end($this->CI->uri->segment_array());
+		$this->id = is_numeric($id) ? $id : FALSE;
 	}
 	
 	// --------------------------------------------------------------------
@@ -37,19 +48,18 @@ class SP_Parser extends CI_Parser {
 		$text = $this->_parse_php($text);
 		
 		// Global variable replacements
-		$text = $this->_simple_tags($text, $nest_vars);
-		
+		$text = $this->_globals($text, $nest_vars);
+
 		// @TODO: Think of a plugin trigger
 		
 		// Conditionals that use the globals
 		$text = $this->_conditionals($text);
 		
-		// The dynamic content needs an id			
-		$id = end($this->CI->uri->segment_array());
-		$this->id = is_numeric($id) ? $id : FALSE;
-		
 		// Start parsing the pairs
 		$text = $this->_find_pairs($text);
+		
+		// Parse simple tags that might rely on the data above
+		$text = $this->_parse_late_singles($text, TRUE);
 
 		// Last conditional run
 		$text = $this->_conditionals($text);
@@ -66,9 +76,9 @@ class SP_Parser extends CI_Parser {
 	 * Does not deal with globals inside other tags - those are done
 	 * separately by the handlers for those tags (@TODO make this true!)
 	 *
-	 * @access	public
+	 * @access	private
 	 */
-	function _simple_tags($text, $nest_vars)
+	function _globals($text, $nest_vars)
 	{
 		// Seperated for readability - no duplicate keys!
 		$board = array(
@@ -114,7 +124,29 @@ class SP_Parser extends CI_Parser {
 		
 		return $text;
 	}
+
+	// --------------------------------------------------------------------
 	
+	/**
+	 * Replace Single Variables
+	 *
+	 * These are done at the end of the parsing sequence,
+	 * so they should have access to most of the data that
+	 * is generated
+	 *
+	 * @access	private
+	 */
+	function _parse_late_singles($text)
+	{
+		$tag_name = '('.implode('|', $this->CI->singles->late).')';
+		$parameter = '(?:[:](['.preg_quote('a-z0-9/._-', '#').']+))?';
+		$optional = '(?: (.+?))?';
+		
+		$regex = "#" . T_OPEN . $tag_name . $parameter . $optional . T_CLOSE . "#is";
+
+		return preg_replace_callback($regex, array(&$this->CI->singles, 'dispatch'), $text);
+	}
+
 	// --------------------------------------------------------------------
 	
 	/**
@@ -138,7 +170,6 @@ class SP_Parser extends CI_Parser {
 		$optional = '(?: (.+?))?';
 		$parameter = '(?:[:](\d+))?';
 
-		// One regex to rule them all
 		$regex = "#" . T_OPEN . $tag_name . $parameter . $optional . T_CLOSE . "(.+?)" . T_OPEN . '/\\1' . T_CLOSE. "#is";
 
 		return preg_replace_callback($regex, array($this, '_handle_pairs'), $text);
@@ -355,31 +386,32 @@ class SP_Parser extends CI_Parser {
 		
 		foreach($variable as $var => $data)
 		{
-			$text = $this->_parse_pair($var, $data, $text);
+			$text = $this->_add_db($var, $data, $text);
 		}
 
 		// Cleanup child tags
 		$pattern = "#{(forums|threads)}(.+?){" . '/'. '\\1' . "}#is";
-		if ( preg_match_all($pattern, $text, $matches))
-		{
-			// Found tags, by key :)
-			$found = $matches[1];
-			$full_matches = $matches[0];
-			
-			// Clean up
-			foreach($matches[0] as $key => $full_match)
-			{
-				// Do we have an empty alternative?
-				if (preg_match('#{' .$found[$key]. ':empty}(.+?){/empty}#is', $text, $match))
-				{
-					$text = str_replace($match[0], $match[1], $text);
-				
-				}
-				$text = str_replace($full_match, '', $text);
-			}
-		}
 		
-		return $text;
+		return preg_replace_callback($pattern, array($this, '_clean_children'), $text);
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Cleans up the child tags
+	 *
+	 * @access	private
+	 */
+	function _clean_children($matches)
+	{
+		$prefix = substr($matches[1], 0 , 1);
+
+		if (preg_match('#' . T_OPEN . $prefix . ':empty' . T_CLOSE . '(.+?)' . T_OPEN .'/empty' . T_CLOSE . '#is', $matches[2], $match))
+		{
+			return $match[1];
+		}
+
+		return '';
 	}
 	
 	// --------------------------------------------------------------------
@@ -397,25 +429,7 @@ class SP_Parser extends CI_Parser {
 
 		return $text;
 	}
-	
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Evaluates the final php
-	 *
-	 * @access	private
-	 */
-	function _parse_php($text)
-	{
-		ob_start();
-		echo eval('?>'.$text.'<?php ');
-		$text = ob_get_contents();
-		@ob_end_clean();
 
-		return $text;
-	}
-	
 	// --------------------------------------------------------------------
 	
 	/**
@@ -433,7 +447,6 @@ class SP_Parser extends CI_Parser {
 		$opt_vars = array();
 				
 		// Quoted text is parsed as one to allow for spaces
-		// Thanks to the input lib for the regex idea ;-)
 		if (preg_match_all('#\s*([a-z\-]+)=(\042|\047)([^\\2]*?)\\2#i', $optional, $matches))
 		{
 			foreach ($matches[0] as $key => $match)
@@ -466,6 +479,64 @@ class SP_Parser extends CI_Parser {
 		}
 		
 		return (count($opt_vars) > 0) ? $opt_vars : FALSE;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Converts the db tag data to a unique replacement
+	 * This is done to prevent parsing tags inside db
+	 * data.
+	 *
+	 * @TODO: Clean up!
+	 *
+	 * @access	private
+	 */
+	function _add_db($tag, $data, $text)
+	{
+		if (is_array($data))
+		{
+			foreach($data as $num => $inner)
+			{
+				foreach($inner as $key => $val)
+				{
+					$random = uniqid(rand().$key);
+					$this->db_store[$random] = $val;
+					$inner[$key] = $random;
+				}
+				
+				$data[$num] = $inner;
+			}
+			
+			$text = $this->_parse_pair($tag, $data, $text);
+		}
+		else
+		{
+			echo 'yes: '.$tag.'<br />';
+			$random = uniqid(rand().$tag);
+			$this->db_store[$random] = $data;
+
+			$text = $this->_parse_single($var, $random, $text);
+		}
+
+		return $text;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Evaluates the final php
+	 *
+	 * @access	private
+	 */
+	function _parse_php($text)
+	{
+		ob_start();
+		echo eval('?>'.$text.'<?php ');
+		$text = ob_get_contents();
+		@ob_end_clean();
+
+		return $text;
 	}
 }
 
