@@ -7,8 +7,6 @@ class SP_Parser extends CI_Parser {
 
 	var $dynamic_parsed = FALSE;	// boolean to limit dynamic parsing
 	var $dynamic = array();			// array of dynamic tags
-	
-	var $db_store = array();		// store db data until post parse
 
 	/**
 	 * Constructor
@@ -48,9 +46,6 @@ class SP_Parser extends CI_Parser {
 	 */
 	function parse($text, $nest_vars = array())
 	{
-		// New one for each template
-		$this->db_store = array();
-		
 		// Start out by eval'ing normal php to allow for
 		// complex logic that the parser cannot handle
 		$text = $this->_parse_php($text);
@@ -509,7 +504,7 @@ class SP_Parser extends CI_Parser {
 				foreach($inner as $key => $val)
 				{
 					$random = uniqid(rand().$key);
-					$this->db_store[$random] = $val;
+					$this->CI->template->_db_store[$random] = $val;
 					$inner[$key] = $random;
 				}
 				
@@ -522,7 +517,7 @@ class SP_Parser extends CI_Parser {
 		{
 			echo 'yes: '.$tag.'<br />';
 			$random = uniqid(rand().$tag);
-			$this->db_store[$random] = $data;
+			$this->CI->template->_db_store[$random] = $data;
 
 			$text = $this->_parse_single($var, $random, $text);
 		}

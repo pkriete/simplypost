@@ -25,8 +25,9 @@ class Template {
 	var $paths;
 	var $slugs;
 	var $tmp_folder;
+	
 	var $_processed = array();
-
+	var $_db_store	= array();
 	/**
 	 * Constructor
 	 *
@@ -154,21 +155,23 @@ class Template {
 			if ($variables)
 			{
 				$variables = $this->CI->parser->_split_optional($variables);
-			}			
-			
+			}		
+
 			// Recurse into each file
 			$inner = $this->render($nest_path, $variables);
-						
+
 			// Replace on the way out
 			$inner = $this->_processed[$nest_path];
 			$text = str_replace($match, $inner, $text);
 			
 			// And clean the db store
-			// @TODO - efficiency?
-			foreach($this->CI->parser->db_store as $unique => $content)
+			foreach($this->_db_store as $unique => $content)
 			{
 				$text = str_replace($unique, $content, $text);
 			}
+			
+			// Reset the store
+			$this->db_store = array();
 		}
 		
 		$this->_processed[$path] = $text;
