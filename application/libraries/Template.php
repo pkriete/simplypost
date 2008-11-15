@@ -111,7 +111,8 @@ class Template {
 	 * Start the parsing phase
 	 *
 	 * Makes sure all required templates are available
-	 * and builds an array of files to parse.
+	 * and recursively runs through the files - sending
+	 * each to the parser in turn.
 	 *
 	 * @access	public
 	 * @param	Root template path
@@ -155,7 +156,7 @@ class Template {
 			if ($variables)
 			{
 				$variables = $this->CI->parser->_split_optional($variables);
-			}		
+			}
 
 			// Recurse into each file
 			$inner = $this->render($nest_path, $variables);

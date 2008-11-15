@@ -65,6 +65,11 @@ class Frontend extends Controller {
 		
 		// Ok, before we start parsing stuff, a locked system goes nowhere		
 		$locked = $this->permission->_check_locked();
+
+		if ($locked)
+		{
+			die('locked');
+		}
 		
 		// @TODO Force login page when locked.
 /*

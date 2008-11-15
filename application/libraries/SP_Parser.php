@@ -160,6 +160,7 @@ class SP_Parser extends CI_Parser {
 	function _find_pairs($text)
 	{
 		$pairs = array(
+			'root',
 			'category',
 			'forum',
 			'forums',
@@ -234,6 +235,36 @@ class SP_Parser extends CI_Parser {
 		$optional = $this->_split_optional($optional);
 		
 		return $this->$pf($inner, $optional, $id);
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
+	 * Parse the root tag
+	 *
+	 * The root tag will grab a list of all root - node elements of the tree
+	 *
+	 * @access	public
+	 * @param	text to parse
+	 * @param	optional parameters
+	 * @param	node id
+	 */
+	function _parse_root($text, $optional, $id)
+	{
+		// Required Model
+		$this->CI->load->model('tree_model', 'tree');
+		
+		// Tree Helper
+		$this->CI->load->helper('tree');
+
+		// Get the root nodes and direct descendants
+		$subtree = $this->CI->tree->get_tree();
+		
+		reorder_tree($subtree);
+		
+		exit;
+		// Parse like a forum
+	//	return $this->_parse_forum($text, $optional, $id);
 	}
 	
 	// --------------------------------------------------------------------

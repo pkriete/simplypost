@@ -42,9 +42,23 @@ class Tree_model extends Model {
 	 * @access	private
 	 * @return	mixed
 	 */
-	function get_tree()
+	function get_tree($depth = 1)
 	{
 		$this->db->join($this->c_table, "{$this->c_table}.meta_id = {$this->table}.node_id", 'inner');
+		
+		if ($depth > 0)
+		{
+			$stop = '%';
+			for($i = 0; $i < $depth; $i++)
+			{
+				$stop .= '.%';
+			}
+			$stop .= '.';
+			
+			$this->db->where("materialized_path LIKE '%.'");
+			$this->db->where("materialized_path NOT LIKE '%.{$stop}'");
+		}
+
 		$i = $this->db->get($this->table);
 		return $var = ($i->num_rows() > 0) ? $i->result() : FALSE;
 	}
@@ -95,7 +109,7 @@ class Tree_model extends Model {
 		$this->db->from($this->table.' t1, '.$this->table.' t2');
 		$this->db->where('t1.node_id', $node_id);
 
-		$this->db->where("POSITION(t2.materialized_path IN t1.materialized_path) = 1", NULL, FALSE);
+		$this->db->where("POSITION(t2.materialized_path IN t1.materialized_path) = '1'", NULL, FALSE);
 		
 		$this->db->join($this->c_table, "{$this->c_table}.meta_id = t2.node_id", 'inner');
 
@@ -116,7 +130,7 @@ class Tree_model extends Model {
 	function get_subtree($node_id, $depth = 0, $include = FALSE)
 	{
 		$begin = $include ? '%' : '%.';
-		$this->db->where("materialized_path LIKE CONCAT((SELECT materialized_path from {$this->table} where node_id = {$node_id}),'{$begin}')");
+		$this->db->where("materialized_path LIKE CONCAT((SELECT materialized_path from {$this->table} where node_id = '{$node_id}'),'{$begin}')");
 		
 		if ($depth > 0)
 		{
@@ -127,7 +141,7 @@ class Tree_model extends Model {
 			}
 			$stop .= '.';
 			
-			$this->db->where("materialized_path NOT LIKE CONCAT((SELECT materialized_path from {$this->table} where node_id = {$node_id}),'{$stop}')");
+			$this->db->where("materialized_path NOT LIKE CONCAT((SELECT materialized_path from {$this->table} where node_id = '{$node_id}'),'{$stop}')");
 		}
 
 		$this->db->join($this->c_table, "{$this->c_table}.meta_id = {$this->table}.node_id", 'inner');
