@@ -24,12 +24,7 @@ function reorder_tree($tree)
 	$CI->tree_iterator->initialize($tree);
 	
 	$tree = $CI->tree_iterator->get_tree();
-
-	echo '<pre>';
-	print_r($tree);
-	echo '</pre>';
-		
-	exit('done!');
+	return $tree;
 }
 
 

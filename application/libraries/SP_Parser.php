@@ -189,11 +189,11 @@ class SP_Parser extends CI_Parser {
 	function _handle_pairs($matches)
 	{
 		// For readability
-		$text = $matches[0];
-		$tag = $matches[1];
-		$param = $matches[2];
+		$text	= $matches[0];
+		$tag	= $matches[1];
+		$param	= $matches[2];
 		$optional = $matches[3];
-		$inner = $matches[4];
+		$inner	= $matches[4];
 		
 		// The function that will do the heavy lifting
 		$pf = '_parse_'.$tag;
@@ -260,9 +260,29 @@ class SP_Parser extends CI_Parser {
 		// Get the root nodes and direct descendants
 		$subtree = $this->CI->tree->get_tree();
 		
-		reorder_tree($subtree);
+		$subtree = reorder_tree($subtree);
 		
-		exit;
+		// Loop through all the trees, parsing everything along the way
+		
+		$newt = text;
+		
+		foreach($subtree as $current)
+		{
+			$node_type = $current->node_type;
+			$tmp = $this->_parse_node($current, $text, $node_type);
+			
+			if ($current->children)
+			{
+				$restrict_child = $current->restrict_child_type;
+				$tmp = $this->_parse_children($tmp, $optional, $current->children, $restrict_child);
+			}
+			
+			$newt .= $tmp;
+		}
+		
+		return $newt;
+		
+	//	exit;
 		// Parse like a forum
 	//	return $this->_parse_forum($text, $optional, $id);
 	}
