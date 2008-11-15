@@ -12,6 +12,13 @@ $paths['home']			= 'home';
 $paths['404']			= '404';
 $paths['login']			= 'member/login';
 
+// Convenience
+$paths['category']		= 'category';
+$paths['forum']			= 'forum';
+$paths['thread']		= 'thread';
+$paths['post']			= 'post';
+
+
 /* Force a slug on some uris
  *
  * Structure:

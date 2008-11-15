@@ -122,10 +122,10 @@ class Template {
 	{
 		$path = trim($path, '/');
 
-		// Prevent infinite recursion and duplicious parsing
-		if ( isset($this->_processed[$path]) )
+		// Prevent infinite recursion
+		if ( isset($this->_processed[$path]) && $this->_processed[$path] > 100 )
 		{
-			return $this->_processed[$path];
+			die('Same template parsed more than 100 times.  Possible infinite recursion caught.');
 		}
 		
 		if ( ! file_exists($this->tmp_folder.$path.EXT))
@@ -139,7 +139,7 @@ class Template {
 		// Parse the current template
 		$text = $this->CI->parser->parse($text, $nest_vars);
 		
-		$this->_processed[$path] = $text;
+		$this->_processed[$path]++;
 		
 		// Find the nesting calls
 		$optional = '(?: (.+?))?';
@@ -162,7 +162,6 @@ class Template {
 			$inner = $this->render($nest_path, $variables);
 
 			// Replace on the way out
-			$inner = $this->_processed[$nest_path];
 			$text = str_replace($match, $inner, $text);
 			
 			// And clean the db store
@@ -175,7 +174,6 @@ class Template {
 			$this->db_store = array();
 		}
 		
-		$this->_processed[$path] = $text;
 		return $text;
 	}
 	

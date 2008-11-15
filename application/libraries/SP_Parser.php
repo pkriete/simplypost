@@ -67,6 +67,9 @@ class SP_Parser extends CI_Parser {
 		// Last conditional run
 		$text = $this->_conditionals($text);
 		
+		// {php} tags
+		$text = $this->_php($text);
+		
 		// Nested optionals?
 		return $text;
 	}
@@ -90,6 +93,7 @@ class SP_Parser extends CI_Parser {
 		);
 		
 		$urls = array(
+						'base_url'			=> site_url(),
 						'backend_base_url'	=> $this->CI->preferences->get('backend_base_url'),
 						'backend_login'		=> $this->CI->preferences->get('backend_login'),
 						'frontend_login'	=> $this->CI->template->get_path('login')
@@ -171,8 +175,8 @@ class SP_Parser extends CI_Parser {
 		);
 		
 		$tag_name = '('.implode('|', $pairs).')';
-		$optional = '(?: (.+?))?';
 		$parameter = '(?:[:](\d+))?';
+		$optional = '(?: (.+?))?';
 
 		$regex = "#" . T_OPEN . $tag_name . $parameter . $optional . T_CLOSE . "(.+?)" . T_OPEN . '/\\1' . T_CLOSE. "#is";
 
@@ -212,7 +216,6 @@ class SP_Parser extends CI_Parser {
 			// No parameter, check dynamic
 			if ( ! $param)
 			{
-				
 				// Dynamic gone or we have no id? Skip
 				if ($this->dynamic_parsed || ! $this->id)
 				{
@@ -249,7 +252,7 @@ class SP_Parser extends CI_Parser {
 	 * @param	optional parameters
 	 * @param	node id
 	 */
-	function _parse_root($text, $optional, $id)
+	function _parse_root($text, $optional)
 	{
 		// Required Model
 		$this->CI->load->model('tree_model', 'tree');
@@ -262,10 +265,7 @@ class SP_Parser extends CI_Parser {
 		
 		$subtree = reorder_tree($subtree);
 		
-		// Loop through all the trees, parsing everything along the way
-		
-		$newt = text;
-		
+		// Loop through all the trees, parsing everything along the way		
 		foreach($subtree as $current)
 		{
 			$node_type = $current->node_type;
@@ -281,10 +281,6 @@ class SP_Parser extends CI_Parser {
 		}
 		
 		return $newt;
-		
-	//	exit;
-		// Parse like a forum
-	//	return $this->_parse_forum($text, $optional, $id);
 	}
 	
 	// --------------------------------------------------------------------
@@ -394,7 +390,7 @@ class SP_Parser extends CI_Parser {
 		}
 
 		// What meta tags do we have to parse?
-		$node_meta = array('title', 'description');
+		$node_meta = array('title', 'description', 'node_id');
 		
 		// Meta Data for the parent
 		foreach($node_meta as $meta_key)
@@ -420,7 +416,7 @@ class SP_Parser extends CI_Parser {
 	 */
 	function _parse_children($text, $optional, $tree, $restrict_type = FALSE)
 	{
-		$node_meta = array('title', 'description');
+		$node_meta = array('title', 'description', 'node_id');
 		
 		// An array of data based on child type
 		$variable = array();
@@ -444,9 +440,12 @@ class SP_Parser extends CI_Parser {
 		}
 
 		// Cleanup child tags
-		$pattern = "#{(forums|threads)}(.+?){" . '/'. '\\1' . "}#is";
+		$pattern = '#'.T_OPEN.'(forums|threads)'.T_CLOSE.'(.+?)'.T_OPEN.'/\\1'.T_CLOSE.'#is';
+		$text = preg_replace_callback($pattern, array($this, '_clean_children'), $text);
 		
-		return preg_replace_callback($pattern, array($this, '_clean_children'), $text);
+		// Cleanup 'empty' tags
+		$pattern = '#'.T_OPEN.'(f:empty|t:empty)'.T_CLOSE.'(.+?)'.T_OPEN.'/empty'.T_CLOSE.'#is';
+		return preg_replace($pattern, '', $text);
 	}
 	
 	// --------------------------------------------------------------------
@@ -471,7 +470,7 @@ class SP_Parser extends CI_Parser {
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Evaluates the final php
+	 * Evaluate conditionals
 	 *
 	 * @access	private
 	 */
@@ -501,7 +500,7 @@ class SP_Parser extends CI_Parser {
 		$opt_vars = array();
 				
 		// Quoted text is parsed as one to allow for spaces
-		if (preg_match_all('#\s*([a-z\-]+)=(\042|\047)([^\\2]*?)\\2#i', $optional, $matches))
+		if (preg_match_all('#\s*([a-z_-]+)=(\042|\047)([^\\2]*?)\\2#i', $optional, $matches))
 		{
 			foreach ($matches[0] as $key => $match)
 			{
@@ -554,7 +553,9 @@ class SP_Parser extends CI_Parser {
 			{
 				foreach($inner as $key => $val)
 				{
+					$key = str_replace(':', '', $key);  // colons confuse the hell out of the singles
 					$random = uniqid(rand().$key);
+
 					$this->CI->template->_db_store[$random] = $val;
 					$inner[$key] = $random;
 				}
@@ -566,13 +567,26 @@ class SP_Parser extends CI_Parser {
 		}
 		else
 		{
-			echo 'yes: '.$tag.'<br />';
 			$random = uniqid(rand().$tag);
 			$this->CI->template->_db_store[$random] = $data;
 
 			$text = $this->_parse_single($var, $random, $text);
 		}
 
+		return $text;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Replace php tags
+	 *
+	 * @access	private
+	 */
+	function _php($text)
+	{
+		// @TODO implementation: {php}bla bla bla{/php}
+		
 		return $text;
 	}
 	

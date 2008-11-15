@@ -49,7 +49,7 @@ class Singles {
 
 		if (method_exists($this, $method))
 		{
-			return $this->$method($match[1], $optional);
+			return $this->$method($match[2], $optional);
 		}
 		return $match[3];
 	}
