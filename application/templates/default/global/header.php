@@ -4,4 +4,3 @@
 </head>
 <body>
 	<h1>{n:title}</h1>
-	<a href="{base_url}">Home</a>

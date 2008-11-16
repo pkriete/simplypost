@@ -1,5 +1,12 @@
 {nest:global/header title="Show Category"}
 
+<div id="breadcrumb">
+<a href="{base_url}">Home</a> &rsaquo;
+{category}
+	{parents}<a href="{url:{p:node_id} path='{p:node_type}'}">{p:title}</a> &rsaquo; {/parents} {title}
+{/category}
+</div>
+
 {category}
 
 	<h1>{title}</h1>

@@ -21,13 +21,14 @@
  */
 class Template {
 
-	var $CI;
-	var $paths;
-	var $slugs;
-	var $tmp_folder;
+	var $CI;						// CI super object
+	var $paths;						// named paths
+	var $slugs;						// forced slugs
+	var $tmp_folder;				// root template folder
 	
-	var $_processed = array();
-	var $_db_store	= array();
+	var $_processed = array();		// parsing counter
+	var $_db_store	= array();		// unsafe input
+	var $_bc_store	= array();		// breadcrumbs
 	/**
 	 * Constructor
 	 *
@@ -108,17 +109,32 @@ class Template {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Parsing coordinator
+	 *
+	 * @access	public
+	 * @param	Root template path
+	 */
+	function render($path)
+	{
+		$text = $this->_render($path);
+
+		return $text;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Start the parsing phase
 	 *
 	 * Makes sure all required templates are available
 	 * and recursively runs through the files - sending
 	 * each to the parser in turn.
 	 *
-	 * @access	public
+	 * @access	private
 	 * @param	Root template path
 	 * @param	Nesting variables
 	 */
-	function render($path, $nest_vars = array())
+	function _render($path, $nest_vars = array())
 	{
 		$path = trim($path, '/');
 
@@ -159,7 +175,7 @@ class Template {
 			}
 
 			// Recurse into each file
-			$inner = $this->render($nest_path, $variables);
+			$inner = $this->_render($nest_path, $variables);
 
 			// Replace on the way out
 			$text = str_replace($match, $inner, $text);

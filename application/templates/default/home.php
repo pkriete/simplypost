@@ -1,5 +1,9 @@
 {nest:global/header title="Homepage"}
 
+<div id="breadcrumb">
+	Home
+</div>
+
 <div id="info_block">
 <p>
 	<a href="{backend_login}">Backend Login</a><br />

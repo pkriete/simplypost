@@ -1,5 +1,12 @@
 {nest:global/header title="Show Forum"}
 
+<div id="breadcrumb">
+<a href="{base_url}">Home</a> &rsaquo;
+{forum}
+	{parents}<a href="{url:{p:node_id} path='{p:node_type}'}">{p:title}</a> &rsaquo; {/parents} {title}
+{/forum}
+</div>
+
 {forum}
 
 	<h1>{title}</h1>

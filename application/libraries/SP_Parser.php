@@ -6,7 +6,7 @@ class SP_Parser extends CI_Parser {
 	var $id;						// id as extracted from the url
 
 	var $dynamic_parsed = FALSE;	// boolean to limit dynamic parsing
-	var $dynamic = array();			// array of dynamic tags
+	var $dynamic_tags = array();	// array of dynamic tags
 
 	/**
 	 * Constructor
@@ -24,7 +24,7 @@ class SP_Parser extends CI_Parser {
 		define(T_OPEN, $this->l_delim);
 		define(T_CLOSE, $this->r_delim);
 		
-		$this->dynamic = array(
+		$this->dynamic_tags = array(
 								'category',
 								'forum',
 								'thread',
@@ -167,9 +167,7 @@ class SP_Parser extends CI_Parser {
 			'root',
 			'category',
 			'forum',
-			'forums',
 			'thread',
-			'threads',
 			'post',
 			'member'
 		);
@@ -211,20 +209,20 @@ class SP_Parser extends CI_Parser {
 		// If it's in the dynamic list, it needs an id of some sort.
 		// The first time we use the function parameter (url id)
 		// after that it must have a :id to be parsed
-		if (in_array($tag, $this->dynamic))
+		if (in_array($tag, $this->dynamic_tags))
 		{
 			// No parameter, check dynamic
 			if ( ! $param)
 			{
-				// Dynamic gone or we have no id? Skip
-				if ($this->dynamic_parsed || ! $this->id)
+				// Already parsed and not the same type, or no id? Skip
+				if ($this->dynamic_parsed && $this->dynamic_parsed != $tag OR ! $this->id)
 				{
 					return $text;
 				}
 				else
 				{
-					// This will be a the dynamic one
-					$this->dynamic_parsed = TRUE;
+					// Redundant after the first time
+					$this->dynamic_parsed = $tag;
 					$id = $this->id;
 				}
 			}
@@ -243,6 +241,31 @@ class SP_Parser extends CI_Parser {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Parse the breadcrumb tag
+	 *
+	 * This may be called before a dynamic tag is parsed, so
+	 * we just hide it away for safekeeping until we're sure.
+	 *
+	 * @access	public
+	 * @param	text to parse
+	 * @param	optional parameters
+	 */
+	function _parse_breadcrumb($text, $data)
+	{
+		// Add the text to the options
+		$data['text'] = $text;
+		
+		// Store it
+		$random = uniqid(rand().'breadcrumb');
+		$this->CI->template->_bc_store[$random] = $data;
+		
+		// And set a marker
+		return $random;
+	}
+	
+	// --------------------------------------------------------------------
+
+	/**
 	 * Parse the root tag
 	 *
 	 * The root tag will grab a list of all root - node elements of the tree
@@ -250,7 +273,6 @@ class SP_Parser extends CI_Parser {
 	 * @access	public
 	 * @param	text to parse
 	 * @param	optional parameters
-	 * @param	node id
 	 */
 	function _parse_root($text, $optional)
 	{
@@ -334,6 +356,7 @@ class SP_Parser extends CI_Parser {
 		
 		$text = $this->_parse_node($current, $text, $node_type);
 		$text = $this->_parse_children($text, $optional, $subtree, $restrict_child);
+		$text = $this->_parse_parents($text, $current);
 		
 		return $text;
 	}
@@ -470,6 +493,58 @@ class SP_Parser extends CI_Parser {
 	// --------------------------------------------------------------------
 	
 	/**
+	 * Parse the parent chain
+	 *
+	 * @access	public
+	 * @param	the text to parse
+	 * @param	current node
+	 */
+	function _parse_parents($text, $current)
+	{
+		$node_meta = array('title', 'description', 'node_id', 'node_type');
+
+		// Only do this if the template has parent tags
+		if ( ! strpos($text, T_OPEN.'parents'))
+		{
+			return $text;
+		}
+		
+		$ancestors = $this->CI->tree->get_ancestors($current->node_id);
+		
+		// Root node is always returned - remove it
+		$ancestors = array_slice($ancestors, 0, -1);
+
+		// Anything left?
+		if (count($ancestors) < 1)
+		{
+			// Clean up
+			$pattern = '#'.T_OPEN.'parents'.T_CLOSE.'(.+?)'.T_OPEN.'/parents'.T_CLOSE.'#is';
+			return preg_replace($pattern, '', $text);
+		}
+
+		$parents = array();
+		
+		foreach($ancestors as $parent)
+		{
+			$prefix = substr($parent->node_type, 0, 1).':';
+			
+			$tmp = array();
+			foreach($node_meta as $meta_key)
+			{
+				$tmp['p:'.$meta_key] = $parent->$meta_key;
+			}
+			
+			$parents[] = $tmp;
+		}
+
+		// Add it to our db cache
+		$text = $this->_add_db('parents', $parents, $text);
+		return $text;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
 	 * Evaluate conditionals
 	 *
 	 * @access	private
@@ -553,7 +628,7 @@ class SP_Parser extends CI_Parser {
 			{
 				foreach($inner as $key => $val)
 				{
-					$key = str_replace(':', '', $key);  // colons confuse the hell out of the singles
+					$key = str_replace(':', '', $key);  // colons confuse the hell out of the singles parser
 					$random = uniqid(rand().$key);
 
 					$this->CI->template->_db_store[$random] = $val;

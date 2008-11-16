@@ -34,6 +34,11 @@ class Frontend extends Controller {
 		/* Frontend login?:
 		if ( ! BOARD_LOCKED OR current_user('group') == 1)
 		*/
+		
+		/* Debugging:
+		echo round(xdebug_memory_usage()/1024/1024,2).' MB';
+		echo xdebug_time_index();
+		*/
 	}
 	
 	// --------------------------------------------------------------------
