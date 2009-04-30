@@ -1,0 +1,28 @@
+Global Tags:
+------------------------------------------
+{board_title}
+{template_group}
+{base_url}
+{backend_base_url}
+{backend_login}
+{frontend_login}
+{logged_in}
+{user_id}
+{group_id}
+{username}
+{email}
+{join_date}
+
+==========================================
+
+Single Tags (early):
+------------------------------------------
+
+
+==========================================
+
+Single Tags (late):
+------------------------------------------
+{url}
+parameter: url segments
+optionals: path - prepend a path as defined in your _paths file
