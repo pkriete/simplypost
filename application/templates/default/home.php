@@ -18,7 +18,6 @@
 	<div class="root_header">
 		<h3>{title} <small><a href="{url:{node_id} path='category'}">[view]</a></small></h3>
 		<p>{description}</p>
-		
 	</div>
 	
 	<div class="root_children">
